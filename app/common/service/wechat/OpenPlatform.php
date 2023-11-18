@@ -1,13 +1,14 @@
 <?php
-namespace app\service\wechat;
+namespace app\common\service\wechat;
 
-use app\service\BaseServices;
+use app\common\service\BaseServices;
 use EasyWeChat\Factory;
+use EasyWeChat\OpenPlatform\Application;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class OpenPlatform extends BaseServices {
-    public $app;
+    public Application $app;
 
     public function __construct($config)
     {

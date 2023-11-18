@@ -12,11 +12,11 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace app\middleware;
+namespace app\wechat\middleware;
 
-use Webman\MiddlewareInterface;
-use Webman\Http\Response;
 use Webman\Http\Request;
+use Webman\Http\Response;
+use Webman\MiddlewareInterface;
 
 /**
  * Class StaticFile
@@ -33,10 +33,10 @@ class StaticFile implements MiddlewareInterface
         /** @var Response $response */
         $response = $next($request);
         // Add cross domain HTTP header
-        /*$response->withHeaders([
+        $response->withHeaders([
             'Access-Control-Allow-Origin'      => '*',
             'Access-Control-Allow-Credentials' => 'true',
-        ]);*/
+        ]);
         return $response;
     }
 }
