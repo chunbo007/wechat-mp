@@ -2,8 +2,9 @@
 
 namespace app\common\model;
 
-use app\common\model\BaseModel;
-
+/**
+ * 用户
+ */
 class User extends BaseModel
 {
     protected $table = 'user';

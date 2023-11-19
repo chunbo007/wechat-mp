@@ -5,7 +5,7 @@ module.exports = {
   },
   'extends': [
     'plugin:vue/strongly-recommended',
-    '@vue/standard'
+//    '@vue/standard'
   ],
   rules: {
     'no-console': 'off',
@@ -56,7 +56,8 @@ module.exports = {
       }
     ],
     'template-curly-spacing': 'off',
-    'indent': 'off'
+    'indent': 'off',
+    'space-before-function-paren': 0
   },
   parserOptions: {
     parser: 'babel-eslint'

@@ -2,8 +2,9 @@ import axios from 'axios'
 import store from '@/store'
 import storage from 'store'
 import notification from 'ant-design-vue/es/notification'
-import { VueAxios } from './axios'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
+import message from 'ant-design-vue/es/message'
+import {VueAxios} from './axios'
+import {ACCESS_TOKEN} from '@/store/mutation-types'
 
 // 创建 axios 实例
 const request = axios.create({
@@ -23,8 +24,12 @@ const errorHandler = (error) => {
         message: 'Forbidden',
         description: data.message
       })
-    }
-    if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
+    } else if (error.response.status === 404) {
+      notification.error({
+        message: '404',
+        description: '请求地址不存在'
+      })
+    } else if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
       notification.error({
         message: 'Unauthorized',
         description: 'Authorization verification failed'
@@ -54,6 +59,10 @@ request.interceptors.request.use(config => {
 
 // response interceptor
 request.interceptors.response.use((response) => {
+  if (response.data.code !== 0) {
+    message.error(response.data.msg || '请求出错')
+    return Promise.reject(response.data.msg)
+  }
   return response.data
 }, errorHandler)
 

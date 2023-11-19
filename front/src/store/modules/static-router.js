@@ -1,4 +1,4 @@
-import { asyncRouterMap, constantRouterMap } from '@/config/router.config'
+import {asyncRouterMap, constantRouterMap} from '@/config/router.config'
 import cloneDeep from 'lodash.clonedeep'
 
 /**
@@ -10,7 +10,7 @@ import cloneDeep from 'lodash.clonedeep'
  */
 function hasPermission (permission, route) {
   if (route.meta && route.meta.permission) {
-    console.log('hasPermission', permission)
+    // console.log('hasPermission', permission)
     if (permission === undefined) {
       return false
     }

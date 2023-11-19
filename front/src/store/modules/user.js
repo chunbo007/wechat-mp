@@ -1,8 +1,8 @@
 import storage from 'store'
 import expirePlugin from 'store/plugins/expire'
-import { login, getInfo, logout } from '@/api/login'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
-import { welcome } from '@/utils/util'
+import {getInfo, login, logout} from '@/api/login'
+import {ACCESS_TOKEN} from '@/store/mutation-types'
+import {welcome} from '@/utils/util'
 
 storage.addPlugin(expirePlugin)
 const user = {
@@ -56,7 +56,6 @@ const user = {
         // 请求后端获取用户信息 /api/user/info
         getInfo().then(response => {
           const result = response.data
-          console.log(result)
           if (result.role && result.role.permissions.length > 0) {
             const role = { ...result.role }
             role.permissions = result.role.permissions.map(permission => {

@@ -1,12 +1,12 @@
-import router, { resetRouter } from './router'
+import router, {resetRouter} from './router'
 import store from './store'
 import storage from 'store'
 import NProgress from 'nprogress' // progress bar
 import '@/components/NProgress/nprogress.less' // progress bar custom style
 import notification from 'ant-design-vue/es/notification'
-import { setDocumentTitle, domTitle } from '@/utils/domUtil'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
-import { i18nRender } from '@/locales'
+import {domTitle, setDocumentTitle} from '@/utils/domUtil'
+import {ACCESS_TOKEN} from '@/store/mutation-types'
+import {i18nRender} from '@/locales'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -30,7 +30,6 @@ router.beforeEach((to, from, next) => {
         store
           .dispatch('GetInfo')
           .then(res => {
-            console.log('res', res)
             // 根据用户权限信息生成可访问的路由表
             store.dispatch('GenerateRoutes', { token, ...res }).then(() => {
               // 动态添加可访问路由表

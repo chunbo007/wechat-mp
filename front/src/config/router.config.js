@@ -1,7 +1,7 @@
 // eslint-disable-next-line
-import { UserLayout, BasicLayout, BlankLayout } from '@/layouts'
+import {BasicLayout, UserLayout} from '@/layouts'
 // eslint-disable-next-line
-import { bxAnaalyse } from '@/core/icons'
+import {bxAnaalyse} from '@/core/icons'
 
 const RouteView = {
   name: 'RouteView',
@@ -70,6 +70,68 @@ export const asyncRouterMap = [
             meta: { title: 'menu.form.advanced-form', keepAlive: true }
           }
         ]
+      },
+      {
+        path: '/list',
+        name: 'list',
+        component: RouteView,
+        redirect: '/list/table-list',
+        meta: {title: 'menu.list', icon: 'table'},
+        children: [
+          {
+            path: '/list/table-list/:pageNo([1-9]\\d*)?',
+            name: 'TableListWrapper',
+            hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
+            component: () => import('@/views/list/TableList'),
+            meta: {title: 'menu.list.table-list', keepAlive: true}
+          },
+          {
+            path: '/list/basic-list',
+            name: 'BasicList',
+            component: () => import('@/views/list/BasicList'),
+            meta: {title: 'menu.list.basic-list', keepAlive: true}
+          },
+          {
+            path: '/list/card',
+            name: 'CardList',
+            component: () => import('@/views/list/CardList'),
+            meta: {title: 'menu.list.card-list', keepAlive: true}
+          },
+          {
+            path: '/list/search',
+            name: 'SearchList',
+            component: () => import('@/views/list/search/SearchLayout'),
+            redirect: '/list/search/article',
+            meta: {title: 'menu.list.search-list', keepAlive: true},
+            children: [
+              {
+                path: '/list/search/article',
+                name: 'SearchArticles',
+                component: () => import('../views/list/search/Article'),
+                meta: {title: 'menu.list.search-list.articles'}
+              },
+              {
+                path: '/list/search/project',
+                name: 'SearchProjects',
+                component: () => import('../views/list/search/Projects'),
+                meta: {title: 'menu.list.search-list.projects'}
+              },
+              {
+                path: '/list/search/application',
+                name: 'SearchApplications',
+                component: () => import('../views/list/search/Applications'),
+                meta: {title: 'menu.list.search-list.applications'}
+              }
+            ]
+          }
+        ]
+      },
+      // platform
+      {
+        name: 'platform',
+        path: '/platform',
+        component: () => import('@/views/platform/account'),
+        meta: {title: '开放平台', keepAlive: true, icon: bxAnaalyse}
       }
     ]
   },
