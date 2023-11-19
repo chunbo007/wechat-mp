@@ -50,7 +50,8 @@ router.beforeEach((to, from, next) => {
               }
             })
           })
-          .catch(() => {
+          .catch((e) => {
+            console.log(e)
             notification.error({
               message: '错误',
               description: '请求用户信息失败，请重试'
