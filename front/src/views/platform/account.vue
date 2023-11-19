@@ -145,13 +145,12 @@ export default {
       this.confirmLoading = true
       form.validateFields((errors, values) => {
         if (!errors) {
-          console.log('values', values)
           if (values.id > 0) {
             editPlatform(values).then(res => {
               this.visible = false
               form.resetFields()
               this.$refs.table.refresh()
-              this.$message.info(res['msg'])
+              this.$message.success(res['msg'])
             }).catch(e => {
               console.log(e)
             }).finally(() => {
@@ -162,7 +161,7 @@ export default {
               this.visible = false
               form.resetFields()
               this.$refs.table.refresh()
-              this.$message.info(res['msg'])
+              this.$message.success(res['msg'])
             }).catch(e => {
               console.log(e)
             }).finally(() => {
@@ -183,7 +182,7 @@ export default {
       deletePlatform({id}).then(res => {
         // 刷新表格
         this.$refs.table.refresh()
-        this.$message.info(res['msg'])
+        this.$message.success(res['msg'])
       }).catch(e => {
         console.log(e)
       })
