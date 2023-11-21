@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c26c61decbc3d54cfca2980798fcc13d",
+    "content-hash": "dad11a64820c7df0160bac4d2bb6934a",
     "packages": [
         {
             "name": "easywechat-composer/easywechat-composer",
@@ -2329,6 +2329,41 @@
                 }
             ],
             "time": "2023-07-20T07:21:16+00:00"
+        },
+        {
+            "name": "tinywan/exception-handler",
+            "version": "v1.2.2",
+            "dist": {
+                "type": "zip",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/tinywan/exception-handler/v1.2.2/tinywan-exception-handler-v1.2.2.zip",
+                "reference": "18af45b76fac5f012ba34115378b766c4781a86c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.2",
+                "workerman/webman-framework": "^1.2.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.6",
+                "phpstan/phpstan": "^1.4",
+                "tinywan/jwt": "^1.2",
+                "tinywan/storage": "^0.2.2",
+                "tinywan/validate": "^0.0.6",
+                "webman/think-orm": "^1.1",
+                "workerman/webman": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Tinywan\\ExceptionHandler\\": "src"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "webman exception handler plugin",
+            "time": "2023-11-19T05:43:26+00:00"
         },
         {
             "name": "tinywan/jwt",

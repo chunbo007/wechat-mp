@@ -13,7 +13,7 @@ class AuthController extends BaseController
     /**
      * 不需要登录的方法
      */
-    protected $noNeedLogin = ['login'];
+    protected $noNeedLogin = ['login', 'logout'];
 
     public function login(Request $request): \support\Response
     {
