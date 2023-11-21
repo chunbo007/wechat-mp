@@ -12,4 +12,11 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-return [];
+return [
+    '' => [
+        App\common\middleware\StaticFile::class,
+    ],
+    'admin' => [
+        App\admin\middleware\AuthCheck::class,
+    ]
+];

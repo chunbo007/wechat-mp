@@ -2,14 +2,19 @@
 
 namespace app\admin\controller;
 
-use support\Request;
 use app\admin\model\User;
+use support\Request;
 
 /**
  * 用户登录
  */
 class AuthController extends BaseController
 {
+    /**
+     * 不需要登录的方法
+     */
+    protected $noNeedLogin = ['login'];
+
     public function login(Request $request): \support\Response
     {
         $user = new User();
