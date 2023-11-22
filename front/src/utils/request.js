@@ -29,17 +29,33 @@ const errorHandler = (error) => {
         message: '404',
         description: '请求地址不存在'
       })
-    } else if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
+    } else if (error.response.status === 401) {
       notification.error({
-        message: 'Unauthorized',
-        description: 'Authorization verification failed'
+        message: '登录失效',
+        description: '登录失效，请重新登录'
       })
       if (token) {
-        store.dispatch('Logout').then(() => {
+        store.dispatch('RemoveToken').then(() => {
           setTimeout(() => {
             window.location.reload()
           }, 1500)
         })
+      } else {
+        window.location.reload()
+      }
+    } else if (error.response.status === 402) {
+      notification.error({
+        message: '登录超时',
+        description: '登录超时，请重新登录'
+      })
+      if (token) {
+        store.dispatch('RemoveToken').then(() => {
+          setTimeout(() => {
+            window.location.reload()
+          }, 1500)
+        })
+      } else {
+        window.location.reload()
       }
     }
   }

@@ -116,8 +116,8 @@
 <script>
 import md5 from 'md5'
 import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
-import { mapActions } from 'vuex'
-import { timeFix } from '@/utils/util'
+import {mapActions} from 'vuex'
+import {timeFix} from '@/utils/util'
 // import { getSmsCaptcha, get2step } from '@/api/login'
 
 export default {
@@ -247,7 +247,6 @@ export default {
       })
     },
     loginSuccess (res) {
-      console.log(res)
       // check res.homePage define, set $router.push name res.homePage
       // Why not enter onComplete
       /*

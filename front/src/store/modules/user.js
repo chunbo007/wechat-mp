@@ -98,6 +98,16 @@ const user = {
         }).finally(() => {
         })
       })
+    },
+
+    // 删除 token
+    RemoveToken({commit}) {
+      return new Promise(resolve => {
+        commit('SET_TOKEN', '')
+        commit('SET_ROLES', [])
+        storage.remove(ACCESS_TOKEN)
+        resolve()
+      })
     }
 
   }
