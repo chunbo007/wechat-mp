@@ -126,6 +126,27 @@ export const asyncRouterMap = [
           }
         ]
       },
+      // authorizer
+      {
+        name: 'authorizer',
+        path: '/authorizedAccountManage',
+        component: RouteView,
+        meta: {title: '授权管理', keepAlive: true, icon: bxAnaalyse},
+        children: [
+          {
+            name: 'authorizer-list',
+            path: '/authorizedAccountManage/authorizerList',
+            component: () => import('@/views/authorizedAccountManage/authorizerList'),
+            meta: {title: '普通授权账号', keepAlive: true, icon: bxAnaalyse}
+          },
+          {
+            name: 'dev-webapp-list',
+            path: '/authorizedAccountManage/devWebappList',
+            component: () => import('@/views/authorizedAccountManage/devWebappList'),
+            meta: {title: '代开发小程序', keepAlive: true, icon: bxAnaalyse}
+          }
+        ]
+      },
       // platform
       {
         name: 'platform',

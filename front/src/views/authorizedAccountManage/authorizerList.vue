@@ -1,5 +1,11 @@
 <template>
-  <page-header-wrapper title="开放平台参数配置">
+  <page-header-wrapper :title="false">
+    <template v-slot:content>
+      <div class="normal_flex">
+        <div class="blue_circle"></div>
+        <div>授权帐号指的是获得公众号或者小程序管理员授权的帐号，服务商可为授权帐号提供代开发、代运营等服务。</div>
+      </div>
+    </template>
     <a-card :bordered="false">
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
@@ -45,15 +51,6 @@
           </template>
         </span>
       </s-table>
-
-      <create-form
-        ref="createModal"
-        :loading="confirmLoading"
-        :model="mdl"
-        :visible="visible"
-        @cancel="handleCancel"
-        @ok="handleOk"
-      />
     </a-card>
   </page-header-wrapper>
 </template>
@@ -61,7 +58,6 @@
 <script>
 import {Ellipsis, STable} from '@/components'
 import {addPlatform, deletePlatform, editPlatform, getPlatform} from '@/api/platform'
-import CreateForm from './modules/CreateForm'
 
 const columns = [
   {
@@ -101,8 +97,7 @@ export default {
   name: 'account',
   components: {
     STable,
-    Ellipsis,
-    CreateForm
+    Ellipsis
   },
   data() {
     this.columns = columns
@@ -190,3 +185,19 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+.normal_flex {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .blue_circle {
+    min-width: 10px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #1890ff;
+    margin-right: 10px;
+  }
+}
+</style>

@@ -1,5 +1,13 @@
 <template>
-  <page-header-wrapper title="开放平台参数配置">
+  <page-header-wrapper :title="false">
+    <template v-slot:content>
+      <div class="normal_flex">
+        <div class="blue_circle"></div>
+        <div>
+          代开发小程序指的是小程序管理员将权限集id为18的"小程序开发与数据分析"权限授权给该第三方，服务商可代小程序提交代码、发布上线等
+        </div>
+      </div>
+    </template>
     <a-card :bordered="false">
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
@@ -45,15 +53,6 @@
           </template>
         </span>
       </s-table>
-
-      <create-form
-        ref="createModal"
-        :loading="confirmLoading"
-        :model="mdl"
-        :visible="visible"
-        @cancel="handleCancel"
-        @ok="handleOk"
-      />
     </a-card>
   </page-header-wrapper>
 </template>
@@ -61,7 +60,6 @@
 <script>
 import {Ellipsis, STable} from '@/components'
 import {addPlatform, deletePlatform, editPlatform, getPlatform} from '@/api/platform'
-import CreateForm from './modules/CreateForm'
 
 const columns = [
   {
@@ -101,8 +99,7 @@ export default {
   name: 'account',
   components: {
     STable,
-    Ellipsis,
-    CreateForm
+    Ellipsis
   },
   data() {
     this.columns = columns
@@ -190,3 +187,19 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+.normal_flex {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .blue_circle {
+    min-width: 10px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #1890ff;
+    margin-right: 10px;
+  }
+}
+</style>
