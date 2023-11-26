@@ -3,7 +3,7 @@
     :confirmLoading="loading"
     :visible="visible"
     :width="640"
-    title="新建"
+    :title="this.model ? '编辑' : '新增'"
     @cancel="() => { $emit('cancel') }"
     @ok="() => { $emit('ok') }"
   >
@@ -28,6 +28,9 @@
         <a-form-item label="aes_key">
           <a-input v-decorator="['aes_key', {rules: [{required: true, message: '请输入aes_key'}]}]"/>
         </a-form-item>
+        <a-form-item label="设为默认">
+          <a-switch v-decorator="['is_default', { valuePropName: 'checked' }]"/>
+        </a-form-item>
       </a-form>
     </a-spin>
   </a-modal>
@@ -37,7 +40,7 @@
 import pick from 'lodash.pick'
 
 // 表单字段
-const fields = ['id', 'name', 'app_id', 'secret', 'token', 'aes_key']
+const fields = ['id', 'name', 'app_id', 'secret', 'token', 'aes_key', 'is_default']
 
 export default {
   props: {
@@ -71,11 +74,14 @@ export default {
   },
   created() {
     // 防止表单未注册
-    fields.forEach(v => this.form.getFieldDecorator(v))
-
+    fields.forEach(v => this.form.getFieldDecorator(v, {}))
+    this.form.getFieldDecorator('is_default', {})
     // 当 model 发生改变时，为表单设置值
     this.$watch('model', () => {
-      this.model && this.form.setFieldsValue(pick(this.model, fields))
+      if (this.model) {
+        this.form.setFieldsValue(pick(this.model, fields))
+        this.form.setFieldsValue({is_default: this.model.is_default === 1})
+      }
     })
   }
 }

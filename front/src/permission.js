@@ -60,6 +60,8 @@ router.beforeEach((to, from, next) => {
               next({ path: loginRoutePath, query: { redirect: to.fullPath } })
             })
           })
+        store.dispatch('GetPlatform').then((res) => {
+        })
       } else {
         next()
       }

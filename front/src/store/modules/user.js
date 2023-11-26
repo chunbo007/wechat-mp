@@ -59,11 +59,10 @@ const user = {
           if (result.role && result.role.permissions.length > 0) {
             const role = { ...result.role }
             role.permissions = result.role.permissions.map(permission => {
-              const per = {
+              return {
                 ...permission,
                 actionList: (permission.actionEntitySet || {}).map(item => item.action)
-               }
-              return per
+              }
             })
             role.permissionList = role.permissions.map(permission => { return permission.permissionId })
             // 覆盖响应体的 role, 供下游使用

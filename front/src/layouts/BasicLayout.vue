@@ -9,13 +9,6 @@
     :i18nRender="i18nRender"
     v-bind="settings"
   >
-    <!-- Ads begin
-      广告代码 真实项目中请移除
-      production remove this Ads
-    -->
-    <ads v-if="isProPreviewSite && !collapsed"/>
-    <!-- Ads end -->
-
     <!-- 1.0.0+ 版本 pro-layout 提供 API，
           我们推荐使用这种方式进行 LOGO 和 title 自定义
     -->
@@ -30,9 +23,7 @@
     -->
     <template v-slot:headerContentRender>
       <div>
-        <a-tooltip title="刷新页面">
-          <a-icon type="reload" style="font-size: 18px;cursor: pointer;" @click="() => { $message.info('只是一个DEMO') }" />
-        </a-tooltip>
+        <app-switch/>
       </div>
     </template>
 
@@ -54,15 +45,15 @@
 
 <script>
 // import { asyncRouterMap } from '@/config/router.config.js'
-import { SettingDrawer, updateTheme } from '@ant-design-vue/pro-layout'
-import { i18nRender } from '@/locales'
-import { mapState } from 'vuex'
-import { CONTENT_WIDTH_TYPE, SIDEBAR_TYPE, TOGGLE_MOBILE_TYPE } from '@/store/mutation-types'
+import {SettingDrawer, updateTheme} from '@ant-design-vue/pro-layout'
+import {i18nRender} from '@/locales'
+import {mapState} from 'vuex'
+import {CONTENT_WIDTH_TYPE, SIDEBAR_TYPE, TOGGLE_MOBILE_TYPE} from '@/store/mutation-types'
 
 import defaultSettings from '@/config/defaultSettings'
 import RightContent from '@/components/GlobalHeader/RightContent'
 import GlobalFooter from '@/components/GlobalFooter'
-import Ads from '@/components/Other/CarbonAds'
+import AppSwitch from "@/components/GlobalHeader/AppSwitch";
 
 export default {
   name: 'BasicLayout',
@@ -70,7 +61,7 @@ export default {
     SettingDrawer,
     RightContent,
     GlobalFooter,
-    Ads
+    AppSwitch,
   },
   data () {
     return {

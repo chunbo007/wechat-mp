@@ -35,6 +35,9 @@
         showPagination="auto"
         size="default"
       >
+        <span slot="is_default" slot-scope="text, record">
+          {{ enumData['true_or_false'][text] }}
+        </span>
         <span slot="action" slot-scope="text, record">
           <template>
             <a @click="handleEdit(record)">编辑</a>
@@ -62,6 +65,7 @@
 import {Ellipsis, STable} from '@/components'
 import {addPlatform, deletePlatform, editPlatform, getPlatform} from '@/api/platform'
 import CreateForm from './modules/CreateForm'
+import data from "@/config/data";
 
 const columns = [
   {
@@ -85,9 +89,13 @@ const columns = [
     dataIndex: 'aes_key'
   },
   {
+    title: '是否默认',
+    dataIndex: 'is_default',
+    scopedSlots: {customRender: 'is_default'}
+  },
+  {
     title: '更新时间',
     dataIndex: 'update_time',
-    sorter: true
   },
   {
     title: '操作',
@@ -105,9 +113,10 @@ export default {
     CreateForm
   },
   data() {
-    this.columns = columns
     return {
       // create model
+      columns: columns,
+      enumData: data,
       visible: false,
       confirmLoading: false,
       mdl: null,

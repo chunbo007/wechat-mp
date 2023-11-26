@@ -5,6 +5,7 @@ namespace app\admin\model;
 use app\common\model\Platform as PlatformModel;
 use support\Request;
 use think\db\exception\DbException;
+use Tinywan\ExceptionHandler\Exception\BadRequestHttpException;
 
 /**
  * @property mixed $id
@@ -25,5 +26,35 @@ class Platform extends PlatformModel
                 'page' => $params['current_page'],
                 'list_rows' => $params['page_size']
             ])->toArray();
+    }
+
+    /**
+     * @throws BadRequestHttpException
+     */
+    public static function add($data)
+    {
+        try {
+            if ($data['is_default']) {
+                self::where('is_default', 1)->update(['is_default' => 0]);
+            }
+            self::create($data);
+        } catch (\Exception $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
+    }
+
+    /**
+     * @throws BadRequestHttpException
+     */
+    public static function edit($data)
+    {
+        try {
+            if ($data['is_default']) {
+                self::where('is_default', 1)->update(['is_default' => 0]);
+            }
+            self::update($data);
+        } catch (\Exception $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
     }
 }

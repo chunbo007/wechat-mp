@@ -6,29 +6,28 @@ use app\admin\model\Platform;
 use support\Request;
 use support\Response;
 use think\db\exception\DbException;
+use Tinywan\ExceptionHandler\Exception\BadRequestHttpException;
 
 class PlatformController extends BaseController
 {
+    /**
+     * @throws BadRequestHttpException
+     */
     public function add(Request $request)
     {
         $data = $request->post();
-        $res = Platform::create($data);
-        if ($res->id) {
-            return success();
-        } else {
-            return error('添加失败');
-        }
+        Platform::add($data);
+        return success();
     }
 
+    /**
+     * @throws BadRequestHttpException
+     */
     public function edit(Request $request)
     {
         $data = $request->post();
-        $res = Platform::update($data);
-        if ($res) {
-            return success();
-        } else {
-            return error('修改失败');
-        }
+        Platform::edit($data);
+        return success();
     }
 
     public function delete(Request $request)
