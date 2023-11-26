@@ -131,6 +131,9 @@ const vueConfig = {
         ws: false,
         changeOrigin: true
       }
+    },
+    client: {
+      overlay: false
     }
   },
 

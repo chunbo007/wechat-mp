@@ -30,7 +30,7 @@
       </div>
 
       <div class="table-operator">
-        <a-button icon="plus" type="primary" @click="handleAdd">新建</a-button>
+        <a-button :disabled="refreshButton" icon="plus" type="primary" @click="refresh">刷新</a-button>
       </div>
 
       <s-table
@@ -40,14 +40,33 @@
         rowKey="id"
         showPagination="auto"
         size="default"
+        :scroll="{ x: 1000 }"
       >
-        <span slot="action" slot-scope="text, record">
+        <span slot="app_type" slot-scope="text">
+          {{ enumData["app_type"][text] }}
+        </span>
+        <span slot="register_type" slot-scope="text">
+          {{ enumData["register_type"][text] }}
+        </span>
+        <span slot="account_status" slot-scope="text">
+          {{ enumData["account_status"][text] }}
+        </span>
+        <span slot="is_phone" slot-scope="text">
+          {{ enumData["true_or_false"][text] }}
+        </span>
+        <span slot="is_email" slot-scope="text">
+          {{ enumData["true_or_false"][text] }}
+        </span>
+        <span slot="verify_info" slot-scope="text">
+          {{ enumData["verify_info"][text] }}
+        </span>
+        <span slot="action" slot-scope="text">
           <template>
-            <a @click="handleEdit(record)">编辑</a>
+            <a>获取token</a>
             <a-divider type="vertical"/>
-            <a-popconfirm title="确定删除该记录吗？" @confirm="handleDel(record.id)">
-                <a>删除</a>
-            </a-popconfirm>
+            <a>复制refresh_token</a>
+            <a-divider type="vertical"/>
+            <a>原始报文</a>
           </template>
         </span>
       </s-table>
@@ -56,39 +75,85 @@
 </template>
 
 <script>
+import data from "@/config/data";
 import {Ellipsis, STable} from '@/components'
-import {addPlatform, deletePlatform, editPlatform, getPlatform} from '@/api/platform'
+import {getAuthorizer, refresh} from '@/api/authorizer'
+import Message from "ant-design-vue/lib/message";
 
 const columns = [
   {
+    title: 'AppId',
+    dataIndex: 'appid',
+    width: 180
+  },
+  {
     title: '名称',
-    dataIndex: 'name'
+    dataIndex: 'nick_name',
+    width: 200
   },
   {
-    title: 'app_id',
-    dataIndex: 'app_id'
+    title: '账号类型',
+    dataIndex: 'app_type',
+    scopedSlots: {customRender: 'app_type'},
+    width: 100
   },
   {
-    title: 'secret',
-    dataIndex: 'secret'
+    title: '授权时间',
+    dataIndex: 'auth_time',
+    width: 200
+
   },
   {
-    title: 'token',
-    dataIndex: 'token'
+    title: '主体信息',
+    dataIndex: 'principal_name',
+    width: 250
   },
   {
-    title: 'aes_key',
-    dataIndex: 'aes_key'
+    title: '账号状态',
+    dataIndex: 'account_status',
+    width: 200,
+    scopedSlots: {customRender: 'account_status'}
+  },
+  {
+    title: '注册类型',
+    dataIndex: 'register_type',
+    width: 200,
+    ellipsis: true,
+    scopedSlots: {customRender: 'register_type'}
+  },
+  {
+    title: '已绑手机号',
+    dataIndex: 'is_phone',
+    width: 200,
+    scopedSlots: {customRender: 'is_phone'}
+  },
+  {
+    title: '已绑邮箱',
+    dataIndex: 'is_email',
+    width: 200,
+    scopedSlots: {customRender: 'is_email'}
+  },
+  {
+    title: '认证类型',
+    dataIndex: 'verify_info',
+    width: 200,
+    scopedSlots: {customRender: 'verify_info'}
+  },
+  {
+    title: '原始ID',
+    dataIndex: 'user_name',
+    width: 180
   },
   {
     title: '更新时间',
     dataIndex: 'update_time',
-    sorter: true
+    width: 200
   },
   {
     title: '操作',
     dataIndex: 'action',
-    width: '150px',
+    width: 300,
+    fixed: 'right',
     scopedSlots: {customRender: 'action'}
   }
 ]
@@ -100,9 +165,10 @@ export default {
     Ellipsis
   },
   data() {
-    this.columns = columns
     return {
       // create model
+      enumData: data,
+      columns: columns,
       visible: false,
       confirmLoading: false,
       mdl: null,
@@ -113,13 +179,15 @@ export default {
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
-        return getPlatform(requestParameters)
+        return getAuthorizer(requestParameters)
           .then(res => {
             return res.data
           })
       },
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
+      // 刷新按钮
+      refreshButton: false,
     }
   },
   created() {
@@ -127,59 +195,12 @@ export default {
   },
   computed: {},
   methods: {
-    handleAdd() {
-      this.mdl = null
-      this.visible = true
-    },
-    handleEdit(record) {
-      this.visible = true
-      this.mdl = {...record}
-    },
-    handleOk() {
-      const form = this.$refs.createModal.form
-      this.confirmLoading = true
-      form.validateFields((errors, values) => {
-        if (!errors) {
-          if (values.id > 0) {
-            editPlatform(values).then(res => {
-              this.visible = false
-              form.resetFields()
-              this.$refs.table.refresh()
-              this.$message.success(res['msg'])
-            }).catch(e => {
-              console.log(e)
-            }).finally(() => {
-              this.confirmLoading = false
-            })
-          } else {
-            addPlatform(values).then(res => {
-              this.visible = false
-              form.resetFields()
-              this.$refs.table.refresh()
-              this.$message.success(res['msg'])
-            }).catch(e => {
-              console.log(e)
-            }).finally(() => {
-              this.confirmLoading = false
-            })
-          }
-        } else {
-          this.confirmLoading = false
-        }
-      })
-    },
-    handleCancel() {
-      this.visible = false
-      const form = this.$refs.createModal.form
-      form.resetFields() // 清理表单数据（可不做）
-    },
-    handleDel(id) {
-      deletePlatform({id}).then(res => {
-        // 刷新表格
-        this.$refs.table.refresh()
-        this.$message.success(res['msg'])
-      }).catch(e => {
-        console.log(e)
+    refresh() {
+      this.refreshButton = true
+      refresh().then(res => {
+        this.refreshButton = false
+        Message.success(res['msg'])
+        this.loadData()
       })
     }
   }

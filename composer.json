@@ -24,7 +24,7 @@
     "source": "https://github.com/walkor/webman"
   },
   "require": {
-    "php": ">=7.2",
+    "php": ">=7.4",
     "workerman/webman-framework": "^1.5.0",
     "monolog/monolog": "^2.0",
     "overtrue/wechat": "5.9.1",
@@ -32,7 +32,8 @@
     "ext-simplexml": "*",
     "webman/think-orm": "^1.1",
     "tinywan/jwt": "^1.8",
-    "tinywan/exception-handler": "^1.2"
+    "tinywan/exception-handler": "^1.2",
+    "ext-json": "*"
   },
   "suggest": {
     "ext-event": "For better performance. "

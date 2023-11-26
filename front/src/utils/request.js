@@ -10,7 +10,7 @@ import {ACCESS_TOKEN} from '@/store/mutation-types'
 const request = axios.create({
   // API 请求的默认前缀
   baseURL: process.env.VUE_APP_API_BASE_URL,
-  timeout: 6000 // 请求超时时间
+  timeout: 60000 // 请求超时时间
 })
 
 // 异常拦截处理器
@@ -19,10 +19,16 @@ const errorHandler = (error) => {
     const data = error.response.data
     // 从 localstorage 获取 token
     const token = storage.get(ACCESS_TOKEN)
+    if (error.response.status === 400) {
+      notification.error({
+        message: 'Error',
+        description: data.msg || '请求异常 400'
+      })
+    }
     if (error.response.status === 403) {
       notification.error({
         message: 'Forbidden',
-        description: data.message
+        description: data.msg || '请求异常 403'
       })
     } else if (error.response.status === 404) {
       notification.error({
