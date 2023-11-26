@@ -2,21 +2,29 @@ import {getPlatform} from "@/api/platform";
 
 const platform = {
   state: {
-    info: {}
+    platformList: {},
+    currentPlatform: {}
   },
 
   mutations: {
-    SET_PLATFORM_INFO: (state, info) => {
-      state.info = info
+    GET_PLATFORM_LIST: (state, info) => {
+      state.platformList = info
+    },
+
+    SET_PLATFORM: (state, info) => {
+      state.currentPlatform = info
     }
   },
 
   actions: {
     GetPlatform({commit}, info) {
       getPlatform().then(res => {
-        console.log(res.data.data)
-        commit('SET_PLATFORM_INFO', res.data.data)
+        commit('GET_PLATFORM_LIST', res.data.data)
       })
+    },
+
+    SetPlatform({commit}, info) {
+      commit('SET_PLATFORM', info)
     }
   }
 }

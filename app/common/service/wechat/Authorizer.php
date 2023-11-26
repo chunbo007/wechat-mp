@@ -15,20 +15,25 @@ class Authorizer extends BaseServices
 
     public function __construct($config)
     {
-        $this->app = Factory::openPlatform($config);
+        $this->app = Factory::openPlatform([
+            'app_id' => $config['app_id'],
+            'secret' => $config['secret'],
+            'token' => $config['token'],
+            'aes_key' => $config['aes_key'],
+        ]);
     }
 
     /**
      * 重新获取授权账号列表
-     * @param $request
+     * @param $data
      * @throws BadRequestHttpException
      */
-    public function refresh($request)
+    public function refresh($data)
     {
         try {
             Db::startTrans();
             $model = new Authorizers();
-            $model->where(true)->delete();
+            $model->where('platform_id', $data['platform_id'])->delete();
             $list = $this->app->getAuthorizers();
             $insert_data = [];
             foreach ($list['list'] as $item) {
@@ -36,6 +41,7 @@ class Authorizer extends BaseServices
                 $program_authorizer_info = $program['authorizer_info'];
                 $program_authorization_info = $program['authorization_info'];
                 $insert_data[] = [
+                    'platform_id' => $data['platform_id'],
                     'appid' => $item['authorizer_appid'] ?? '',
                     'refreshtoken' => $item['refresh_token'] ?? '',
                     'auth_time' => $item['auth_time'] ?? '',

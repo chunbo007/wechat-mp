@@ -16,7 +16,7 @@ export function getAuthorizer(parameter) {
 export function refresh(parameter) {
   return request({
     url: api.Refresh,
-    method: 'get',
-    params: parameter
+    method: 'post',
+    data: parameter
   })
 }

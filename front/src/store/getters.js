@@ -11,7 +11,8 @@ const getters = {
   userInfo: state => state.user.info,
   addRouters: state => state.permission.addRouters,
   multiTab: state => state.app.multiTab,
-  platformInfo: state => state.platform.info
+  platformInfo: state => state.platform.platformList,
+  currentPlatform: state => state.platform.currentPlatform,
 }
 
 export default getters

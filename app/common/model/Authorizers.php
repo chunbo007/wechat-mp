@@ -8,8 +8,9 @@ namespace app\common\model;
 class Authorizers extends BaseModel
 {
     static protected array $column = [
-        ['key' => 'name', 'name' => '公司名称'],
-        ['key' => 'app_id', 'name' => 'app_id'],
+        ['key' => 'nick_name', 'name' => '公司名称'],
+        ['key' => 'appid', 'name' => 'app_id'],
+        ['key' => 'platform_id', 'name' => 'platform_id'],
     ];
     protected $table = 'authorizers';
 

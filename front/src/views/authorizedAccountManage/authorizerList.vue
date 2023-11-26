@@ -12,12 +12,12 @@
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
               <a-form-item label="名称">
-                <a-input v-model="queryParam.name" placeholder=""/>
+                <a-input v-model="queryParam['nick_name']" placeholder=""/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="app_id">
-                <a-input v-model="queryParam.app_id" placeholder=""/>
+              <a-form-item label="appid">
+                <a-input v-model="queryParam.appid" placeholder=""/>
               </a-form-item>
             </a-col>
             <span :style="advanced && { float: 'right', overflow: 'hidden' } || {} "
@@ -79,6 +79,7 @@ import data from "@/config/data";
 import {Ellipsis, STable} from '@/components'
 import {getAuthorizer, refresh} from '@/api/authorizer'
 import Message from "ant-design-vue/lib/message";
+import {mapState} from "vuex";
 
 const columns = [
   {
@@ -178,7 +179,7 @@ export default {
       queryParam: {},
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        const requestParameters = Object.assign({}, parameter, this.queryParam)
+        const requestParameters = Object.assign({platform_id: this.currentPlatform.id}, parameter, this.queryParam)
         return getAuthorizer(requestParameters)
           .then(res => {
             return res.data
@@ -193,14 +194,20 @@ export default {
   created() {
     // getRoleList({ t: new Date() })
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      currentPlatform: state => state.platform.currentPlatform
+    })
+  },
   methods: {
     refresh() {
+      // console.log(this.$store.state.platform.currentPlatform)
       this.refreshButton = true
-      refresh().then(res => {
-        this.refreshButton = false
+      refresh({platform_id: this.currentPlatform.id}).then(res => {
         Message.success(res['msg'])
         this.loadData()
+      }).finally(() => {
+        this.refreshButton = false
       })
     }
   }

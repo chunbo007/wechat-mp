@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\Authorizers;
+use app\admin\model\Platform;
 use app\common\service\wechat\Authorizer;
 use support\Request;
 use support\Response;
@@ -19,11 +20,16 @@ class AuthorizerController extends BaseController
      */
     public function refresh(Request $request)
     {
-        $appId = 'wx3a67b967164b59d1';
-        $openPlatformConfig = config("wechat.open_platform.$appId");
-        $authorizer = new Authorizer($openPlatformConfig);
-        $authorizer->refresh($request);
-        return success();
+        try {
+            $data = $request->post();
+            $platform = Platform::where('id', $data['platform_id'])->find();
+            if (!$platform) throw new BadRequestHttpException('平台不存在');
+            $authorizer = new Authorizer($platform);
+            $authorizer->refresh($data);
+            return success();
+        } catch (\Exception $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
     }
 
     /**
