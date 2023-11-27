@@ -4,10 +4,12 @@ namespace app\admin\controller;
 
 use app\admin\model\Authorizers;
 use app\admin\model\Platform;
-use app\common\service\wechat\Authorizer;
+use app\common\service\wechat\OpenPlatform;
 use support\Request;
 use support\Response;
+use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
+use think\db\exception\ModelNotFoundException;
 use Tinywan\ExceptionHandler\Exception\BadRequestHttpException;
 
 /**
@@ -16,20 +18,19 @@ use Tinywan\ExceptionHandler\Exception\BadRequestHttpException;
 class AuthorizerController extends BaseController
 {
     /**
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
      * @throws BadRequestHttpException
      */
     public function refresh(Request $request)
     {
-        try {
-            $data = $request->post();
-            $platform = Platform::where('id', $data['platform_id'])->find();
-            if (!$platform) throw new BadRequestHttpException('平台不存在');
-            $authorizer = new Authorizer($platform);
-            $authorizer->refresh($data);
-            return success();
-        } catch (\Exception $e) {
-            throw new BadRequestHttpException($e->getMessage());
-        }
+        $data = $request->post();
+        $platform = Platform::where('id', $data['platform_id'])->find();
+        if (!$platform) throw new BadRequestHttpException('平台不存在');
+        $authorizer = new OpenPlatform($platform);
+        $authorizer->refresh($data);
+        return success();
     }
 
     /**
