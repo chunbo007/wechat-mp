@@ -6,6 +6,20 @@
         <div>授权帐号指的是获得公众号或者小程序管理员授权的帐号，服务商可为授权帐号提供代开发、代运营等服务。</div>
       </div>
     </template>
+    <a-modal
+      :footer="null"
+      :visible="jsonDataVisible"
+      title="原始报文"
+      width="1000px"
+      @cancel="() => jsonDataVisible = false"
+    >
+      <json-viewer
+        :copyable="{copyText: '复制', copiedText: '复制成功'}"
+        :value="jsonData"
+        expand-depth=3
+        expanded
+      ></json-viewer>
+    </a-modal>
     <a-card :bordered="false">
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
@@ -60,13 +74,13 @@
         <span slot="verify_info" slot-scope="text">
           {{ enumData["verify_info"][text] }}
         </span>
-        <span slot="action" slot-scope="text">
+        <span slot="action" slot-scope="_, row">
           <template>
-            <a>获取token</a>
+            <a @click="getToken(row.appid)">获取token</a>
             <a-divider type="vertical"/>
-            <a>复制refresh_token</a>
+            <a @click="getRefreshToken(row.appid)">复制refresh_token</a>
             <a-divider type="vertical"/>
-            <a>原始报文</a>
+            <a @click="originalMessage(row.appid)">原始报文</a>
           </template>
         </span>
       </s-table>
@@ -77,8 +91,9 @@
 <script>
 import data from "@/config/data";
 import {Ellipsis, STable} from '@/components'
-import {getAuthorizer, refresh} from '@/api/authorizer'
+import {getAuthorizer, getRefreshToken, getToken, originalMessage, refresh} from '@/api/authorizer'
 import Message from "ant-design-vue/lib/message";
+import JsonViewer from 'vue-json-viewer'
 import {mapState} from "vuex";
 
 const columns = [
@@ -163,10 +178,12 @@ export default {
   name: 'account',
   components: {
     STable,
-    Ellipsis
+    Ellipsis,
+    JsonViewer
   },
   data() {
     return {
+      jsonData: {},
       // create model
       enumData: data,
       columns: columns,
@@ -189,10 +206,10 @@ export default {
       selectedRows: [],
       // 刷新按钮
       refreshButton: false,
+      jsonDataVisible: false,
     }
   },
   created() {
-    // getRoleList({ t: new Date() })
   },
   computed: {
     ...mapState({
@@ -209,7 +226,55 @@ export default {
       }).finally(() => {
         this.refreshButton = false
       })
-    }
+    },
+
+    getToken(appid) {
+      let params = {
+        platform_id: this.currentPlatform.id,
+        appid: appid
+      }
+      getToken(params).then(res => {
+
+        let authorizer_access_token = res['data']['authorizer_access_token']
+        navigator.clipboard.writeText(authorizer_access_token)
+          .then(() => {
+            Message.success('复制成功')
+          })
+          .catch((error) => {
+            Message.error('复制失败' + error)
+          });
+      }).finally(() => {
+      })
+    },
+
+    getRefreshToken(appid) {
+      let params = {
+        platform_id: this.currentPlatform.id,
+        appid: appid
+      }
+      getRefreshToken(params).then(res => {
+        let refreshtoken = res['data']['refreshtoken']
+        navigator.clipboard.writeText(refreshtoken)
+          .then(() => {
+            Message.success('复制成功')
+          })
+          .catch((error) => {
+            Message.error('复制失败' + error)
+          });
+      }).finally(() => {
+      })
+    },
+
+    originalMessage(appid) {
+      let params = {
+        platform_id: this.currentPlatform.id,
+        appid: appid
+      }
+      originalMessage(params).then(res => {
+        this.jsonDataVisible = true
+        this.jsonData = JSON.parse(res['data'])
+      })
+    },
   }
 }
 </script>

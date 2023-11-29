@@ -21,8 +21,8 @@ class IndexController
             $xml = simplexml_load_string($xml);
             if (empty($xml)) return '请求体为空';
             $appId = (string)$xml->AppId;
-            $openPlatformConfig = Platform::where('app_id', $appId)->find();
-            $app = new OpenPlatform($openPlatformConfig);
+            $platform = Platform::where('app_id', $appId)->find();
+            $app = new OpenPlatform($platform['id']);
             return $app->handle($request);
         } catch (\Exception $e) {
             throw new BadRequestHttpException($e->getMessage());

@@ -7,19 +7,29 @@ use EasyWeChat\Factory;
 use EasyWeChat\OpenPlatform\Application;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\DbException;
+use think\db\exception\ModelNotFoundException;
 use think\facade\Db;
 use Tinywan\ExceptionHandler\Exception\BadRequestHttpException;
 
 class OpenPlatform extends BaseServices {
     public Application $app;
 
-    public function __construct($config)
+    /**
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     * @throws BadRequestHttpException
+     */
+    public function __construct($platform_id)
     {
+        $platform = $this->getPlatformParams($platform_id);
         $this->app = Factory::openPlatform([
-            'app_id' => $config['app_id'],
-            'secret' => $config['secret'],
-            'token' => $config['token'],
-            'aes_key' => $config['aes_key'],
+            'app_id' => $platform['app_id'],
+            'secret' => $platform['secret'],
+            'token' => $platform['token'],
+            'aes_key' => $platform['aes_key'],
         ]);
     }
 
@@ -43,15 +53,15 @@ class OpenPlatform extends BaseServices {
 
     /**
      * 重新获取授权账号列表
-     * @param $data
+     * @param $platform_id
      * @throws BadRequestHttpException
      */
-    public function refresh($data)
+    public function refresh($platform_id)
     {
         try {
             Db::startTrans();
             $model = new Authorizers();
-            $model->where('platform_id', $data['platform_id'])->delete();
+            $model->where('platform_id', $platform_id)->delete();
             $list = $this->app->getAuthorizers();
             $insert_data = [];
             foreach ($list['list'] as $item) {
@@ -59,7 +69,7 @@ class OpenPlatform extends BaseServices {
                 $program_authorizer_info = $program['authorizer_info'];
                 $program_authorization_info = $program['authorization_info'];
                 $insert_data[] = [
-                    'platform_id' => $data['platform_id'],
+                    'platform_id' => $platform_id,
                     'appid' => $item['authorizer_appid'] ?? '',
                     'refreshtoken' => $item['refresh_token'] ?? '',
                     'auth_time' => $item['auth_time'] ?? '',

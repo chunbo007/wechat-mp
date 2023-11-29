@@ -3,8 +3,9 @@
 namespace app\admin\controller;
 
 use app\admin\model\Authorizers;
-use app\admin\model\Platform;
+use app\common\service\wechat\MiniProgram;
 use app\common\service\wechat\OpenPlatform;
+use Psr\SimpleCache\InvalidArgumentException;
 use support\Request;
 use support\Response;
 use think\db\exception\DataNotFoundException;
@@ -18,18 +19,18 @@ use Tinywan\ExceptionHandler\Exception\BadRequestHttpException;
 class AuthorizerController extends BaseController
 {
     /**
-     * @throws DataNotFoundException
-     * @throws ModelNotFoundException
-     * @throws DbException
+     * @param Request $request
+     * @return array|Response
      * @throws BadRequestHttpException
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
      */
     public function refresh(Request $request)
     {
         $data = $request->post();
-        $platform = Platform::where('id', $data['platform_id'])->find();
-        if (!$platform) throw new BadRequestHttpException('平台不存在');
-        $authorizer = new OpenPlatform($platform);
-        $authorizer->refresh($data);
+        $authorizer = new OpenPlatform($data['platform_id']);
+        $authorizer->refresh($data['platform_id']);
         return success();
     }
 
@@ -41,5 +42,36 @@ class AuthorizerController extends BaseController
     public function list(Request $request)
     {
         return success(Authorizers::list($request));
+    }
+
+    /**
+     * @param Request $request
+     * @return array|Response
+     * @throws BadRequestHttpException
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws InvalidArgumentException
+     * @throws ModelNotFoundException
+     */
+    public function getToken(Request $request)
+    {
+        $data = $request->post();
+        $MiniProgram = new MiniProgram($data['platform_id']);
+        $token = $MiniProgram->getToken($data['appid']);
+        return success($token);
+    }
+
+    public function getRefreshToken(Request $request)
+    {
+        $data = $request->post();
+        $row = Authorizers::where('appid', $data['appid'])->find();
+        return success($row['refreshtoken']);
+    }
+
+    public function originalMessage(Request $request)
+    {
+        $data = $request->post();
+        $row = Authorizers::where('appid', $data['appid'])->find();
+        return success($row['json_data']);
     }
 }
