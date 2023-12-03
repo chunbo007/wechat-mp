@@ -130,8 +130,24 @@ export const asyncRouterMap = [
       {
         name: 'authorizer',
         path: '/authorizer',
-        component: () => import('@/views/authorized/authorizerList'),
+        redirect: '/authorizer/list',
+        component: RouteView,
         meta: {title: '授权管理', keepAlive: true, icon: bxAnaalyse},
+        hideChildrenInMenu: true,
+        children: [
+          {
+            name: 'authorizer',
+            path: '/authorizer/list',
+            component: () => import('@/views/authorizer/authorizerList'),
+            meta: {title: '授权管理', keepAlive: true, icon: bxAnaalyse},
+          },
+          {
+            name: 'authorizer-detail',
+            path: '/authorizer/detail',
+            component: () => import('@/views/authorizer/detail'),
+            meta: {title: '详情', keepAlive: true, icon: bxAnaalyse},
+          },
+        ]
       },
       // platform
       {

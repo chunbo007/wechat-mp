@@ -81,6 +81,10 @@
             <a @click="getRefreshToken(row.appid)">复制refresh_token</a>
             <a-divider type="vertical"/>
             <a @click="originalMessage(row.appid)">原始报文</a>
+            <template v-if="row.app_type === 1">
+            <a-divider type="vertical"/>
+            <a @click="detail(row.appid)">版本管理</a>
+            </template>
           </template>
         </span>
       </s-table>
@@ -168,7 +172,7 @@ const columns = [
   {
     title: '操作',
     dataIndex: 'action',
-    width: 300,
+    width: 400,
     fixed: 'right',
     scopedSlots: {customRender: 'action'}
   }
@@ -275,6 +279,15 @@ export default {
         this.jsonData = JSON.parse(res['data'])
       })
     },
+
+    detail(id) {
+      this.$router.push({
+        path: '/authorizer/detail',
+        query: {
+          id: 123
+        }
+      })
+    }
   }
 }
 </script>
