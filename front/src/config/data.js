@@ -35,6 +35,10 @@ export default {
   verify_info: {
     '-1': '未认证',
     '0': '微信认证'
+  },
+  //服务状态
+  visit_status: {
+    0: '已暂停服务',
+    1: '正常'
   }
-
 }

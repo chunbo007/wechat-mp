@@ -16,7 +16,7 @@
       <json-viewer
         :copyable="{copyText: '复制', copiedText: '复制成功'}"
         :value="jsonData"
-        expand-depth=3
+        :expand-depth='3'
         expanded
       ></json-viewer>
     </a-modal>

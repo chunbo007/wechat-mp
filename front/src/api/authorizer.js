@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 const api = {
-  Refresh: '/authorizer/refresh',
+  refresh: '/authorizer/refresh',
   list: '/authorizer/list',
   getToken: '/authorizer/getToken',
   getRefreshToken: '/authorizer/getRefreshToken',
@@ -18,7 +18,7 @@ export function getAuthorizer(parameter) {
 
 export function refresh(parameter) {
   return request({
-    url: api.Refresh,
+    url: api.refresh,
     method: 'post',
     data: parameter
   })
