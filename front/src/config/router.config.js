@@ -136,7 +136,7 @@ export const asyncRouterMap = [
         hideChildrenInMenu: true,
         children: [
           {
-            name: 'authorizer',
+            name: 'authorizer-list',
             path: '/authorizer/list',
             component: () => import('@/views/authorizer/authorizerList'),
             meta: {title: '授权管理', keepAlive: true, icon: bxAnaalyse},
@@ -145,7 +145,7 @@ export const asyncRouterMap = [
             name: 'authorizer-detail',
             path: '/authorizer/detail',
             component: () => import('@/views/authorizer/detail'),
-            meta: {title: '详情', keepAlive: true, icon: bxAnaalyse},
+            meta: {title: '版本管理', keepAlive: true, icon: bxAnaalyse},
           },
         ]
       },

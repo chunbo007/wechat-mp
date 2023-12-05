@@ -6,20 +6,6 @@
         <div>授权帐号指的是获得公众号或者小程序管理员授权的帐号，服务商可为授权帐号提供代开发、代运营等服务。</div>
       </div>
     </template>
-    <a-modal
-      :footer="null"
-      :visible="jsonDataVisible"
-      title="原始报文"
-      width="1000px"
-      @cancel="() => jsonDataVisible = false"
-    >
-      <json-viewer
-        :copyable="{copyText: '复制', copiedText: '复制成功'}"
-        :value="jsonData"
-        :expand-depth='3'
-        expanded
-      ></json-viewer>
-    </a-modal>
     <a-card :bordered="false">
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
@@ -83,12 +69,26 @@
             <a @click="originalMessage(row.appid)">原始报文</a>
             <template v-if="row.app_type === 1">
             <a-divider type="vertical"/>
-            <a @click="detail(row.appid)">版本管理</a>
+            <a @click="detail(row.id)">版本管理</a>
             </template>
           </template>
         </span>
       </s-table>
     </a-card>
+    <a-modal
+      :footer="null"
+      :visible="jsonDataVisible"
+      title="原始报文"
+      width="1000px"
+      @cancel="() => jsonDataVisible = false"
+    >
+      <json-viewer
+        :copyable="{copyText: '复制', copiedText: '复制成功'}"
+        :expand-depth='3'
+        :value="jsonData"
+        expanded
+      ></json-viewer>
+    </a-modal>
   </page-header-wrapper>
 </template>
 
@@ -284,7 +284,7 @@ export default {
       this.$router.push({
         path: '/authorizer/detail',
         query: {
-          id: 123
+          id: id
         }
       })
     }

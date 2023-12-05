@@ -4,7 +4,6 @@ namespace app\common\service\wechat;
 
 
 use app\admin\model\Authorizers;
-use Psr\SimpleCache\InvalidArgumentException;
 use Tinywan\ExceptionHandler\Exception\BadRequestHttpException;
 
 class MiniProgram extends OpenPlatform
@@ -15,10 +14,6 @@ class MiniProgram extends OpenPlatform
         return $this->app->miniProgram($platform['appid'], $platform['refreshtoken']);
     }
 
-    /**
-     * @throws InvalidArgumentException
-     * @throws BadRequestHttpException
-     */
     public function getToken($appid): array
     {
         try {
@@ -28,10 +23,6 @@ class MiniProgram extends OpenPlatform
         }
     }
 
-    /**
-     * @throws InvalidArgumentException
-     * @throws BadRequestHttpException
-     */
     public function getVisitStatus($appid)
     {
         return $this->getMiniProgram($appid)->base->httpPostJson('wxa/getvisitstatus', []);
