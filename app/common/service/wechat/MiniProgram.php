@@ -33,4 +33,19 @@ class MiniProgram extends OpenPlatform
         return $this->getMiniProgram($appid)->base->httpPostJson('wxa/getversioninfo', []);
     }
 
+    public function getQrCode($appid)
+    {
+        return $this->getMiniProgram($appid)->app_code->getUnlimit('wxcomponent');
+    }
+
+    public function getExpQrCode($appid)
+    {
+        return $this->getMiniProgram($appid)->code->getQrCode();
+    }
+
+    public function getLatestAuditStatus($appid)
+    {
+        return $this->getMiniProgram($appid)->code->getLatestAuditStatus();
+    }
+
 }

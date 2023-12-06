@@ -1,5 +1,27 @@
 <template>
-  <page-header-wrapper title="开放平台参数配置">
+  <page-header-wrapper :title="false">
+    <template v-slot:content>
+      <div class="normal_flex">
+        <div class="blue_circle"></div>
+        <div>需要在<a href="https://open.weixin.qq.com/" target="_blank">开放平台</a>后台配置 "授权事件接收配置" 和
+          "消息与事件接收配置" 才能生效
+        </div>
+      </div>
+      <div class="normal_flex">
+        <div class="blue_circle"></div>
+        <div>
+          授权事件接收配置：
+          <span v-clipboard:copy="authorizer_url" class="text_copy" @click="onCopy">{{ authorizer_url }}</span>
+        </div>
+      </div>
+      <div class="normal_flex">
+        <div class="blue_circle"></div>
+        <div>
+          消息与事件接收配置：
+          <span v-clipboard:copy="authorizer_event" class="text_copy" @click="onCopy">{{ authorizer_event }}</span>
+        </div>
+      </div>
+    </template>
     <a-card :bordered="false">
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
@@ -66,6 +88,12 @@ import {Ellipsis, STable} from '@/components'
 import {addPlatform, deletePlatform, editPlatform, getPlatform} from '@/api/platform'
 import CreateForm from './modules/CreateForm'
 import data from "@/config/data";
+import Message from "ant-design-vue/lib/message";
+import Vue from 'vue';
+import VueClipboard from 'vue-clipboard2';
+
+VueClipboard.config.autoSetContainer = true;
+Vue.use(VueClipboard);
 
 const columns = [
   {
@@ -110,7 +138,7 @@ export default {
   components: {
     STable,
     Ellipsis,
-    CreateForm
+    CreateForm,
   },
   data() {
     return {
@@ -139,7 +167,14 @@ export default {
   created() {
     // getRoleList({ t: new Date() })
   },
-  computed: {},
+  computed: {
+    authorizer_url() {
+      return 'https://' + window.location.hostname + '/wechat'
+    },
+    authorizer_event() {
+      return 'https://' + window.location.hostname + '/wechat/$APPID$'
+    }
+  },
   methods: {
     handleAdd() {
       this.mdl = null
@@ -195,7 +230,31 @@ export default {
       }).catch(e => {
         console.log(e)
       })
+    },
+    onCopy() {
+      Message.success('复制成功')
     }
   }
 }
 </script>
+<style lang="less" scoped>
+.text_copy {
+  color: #1890ff;
+  cursor: pointer;
+}
+
+.normal_flex {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .blue_circle {
+    min-width: 10px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #1890ff;
+    margin-right: 10px;
+  }
+}
+</style>
