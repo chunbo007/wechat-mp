@@ -96,4 +96,9 @@ class OpenPlatform extends BaseServices {
             throw new BadRequestHttpException($e->getMessage());
         }
     }
+
+    public function getTemplate()
+    {
+        return $this->app->code_template->list();
+    }
 }

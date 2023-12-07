@@ -23,3 +23,10 @@ Vue.filter('moment', function (dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
 Vue.filter('momentUnix', function (dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
   return moment.unix(dataStr).format(pattern)
 })
+
+Vue.filter('truncate', function (value, limit = 10) {
+  if (value.length > limit) {
+    return value.slice(0, limit) + '...';
+  }
+  return value;
+})
