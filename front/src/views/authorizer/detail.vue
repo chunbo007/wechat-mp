@@ -56,8 +56,8 @@
     <a-card :bordered="false" :loading="loading" title="体验版本">
       <template v-if="exp_info">
         <a-dropdown slot="extra">
-          <a-menu slot="overlay">
-            <a-menu-item v-for="(item) in audit_option" :key="item.value">{{ item.content }}</a-menu-item>
+          <a-menu slot="overlay" @click="handleExpButton">
+            <a-menu-item v-for="(item) in exp_options" :key="item.value">{{ item.content }}</a-menu-item>
           </a-menu>
           <a-button type="primary"> 操作
             <a-icon type="down"/>
@@ -68,7 +68,7 @@
             <a-descriptions-item :span="3" label="版本号">
               {{ exp_info['exp_version'] }}
             </a-descriptions-item>
-            <a-descriptions-item :span="3" label="发布时间">
+            <a-descriptions-item :span="3" label="提交时间">
               {{ exp_info['exp_time'] | momentUnix }}
             </a-descriptions-item>
             <a-descriptions-item :span="3" label="版本描述">
@@ -92,6 +92,7 @@
     <a-modal
       :confirm-loading="modal_loading"
       :visible="modal_visible"
+      :maskClosable="false"
       title="提交代码"
       width="700px"
       @cancel="modalCancel"
@@ -136,20 +137,21 @@
 </template>
 
 <script>
-import {getDetail} from '@/api/miniprogram'
+import {commit, getDetail} from '@/api/miniprogram'
 import data from "@/config/data";
 
 export default {
   name: 'Version',
   data() {
     return {
+      id: null,
       enum_data: data,
       release_info: undefined,
       exp_info: undefined,
       audit_info: {},
       code_template: [],
       loading: true,
-      modal_visible: true,
+      modal_visible: false,
       modal_loading: false,
       formLayout: {
         labelCol: {
@@ -177,14 +179,32 @@ export default {
 
     },
     modalOk() {
-      // this.modal_visible = false
+      this.modal_loading = true
       this.form.validateFields((errors, values) => {
-        console.log(errors, values)
+        commit({id: this.id, ...values}).then(res => {
+          this.getDetail(this.id)
+          this.modal_visible = false
+          this.$message.success('提交成功')
+        }).finally(() => {
+          this.modal_loading = false
+        })
       })
     },
     modalCancel() {
       this.modal_visible = false
     },
+    handleExpButton(option) {
+      const {key} = option
+      switch (key) {
+        case 1: {
+          // 重新提交代码
+          this.modal_visible = true
+        }
+        case 2: {
+          // 提交审核
+        }
+      }
+    }
   },
   computed: {
     audit_option() {
@@ -210,11 +230,25 @@ export default {
         }]
       }
       return []
+    },
+    exp_options() {
+      const arr = [{
+        content: '重新提交代码',
+        value: 1,
+      }]
+      if (this.audit_info?.status !== 2) {
+        arr.push({
+          content: '提交审核',
+          value: 2,
+        })
+      }
+      return arr
     }
   },
   created() {
     const {id} = this.$route.query
-    this.getDetail(id)
+    this.id = id
+    this.getDetail(this.id)
   },
 }
 </script>
