@@ -41,8 +41,7 @@
             <a-icon type="down"/>
           </a-button>
         </a-dropdown>
-        <span v-if="audit_info.errcode === 85058"> 暂无提交审核的版本或者版本已发布上线 </span>
-        <a-descriptions v-else-if="audit_info.errcode === 0">
+        <a-descriptions>
           <a-descriptions-item :span="3" label="版本号">
             {{ audit_info['user_version'] }}
           </a-descriptions-item>
@@ -62,8 +61,8 @@
             {{ audit_info['reason'] }}
           </a-descriptions-item>
         </a-descriptions>
-        <span v-else> {{ audit_info['errmsg'] }} </span>
       </template>
+      <span v-else> 暂无提交审核的版本或者版本已发布上线 </span>
     </a-card>
     <a-card :bordered="false" :loading="loading" title="体验版本">
       <template v-if="exp_info">

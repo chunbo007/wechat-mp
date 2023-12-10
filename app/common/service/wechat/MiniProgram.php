@@ -38,7 +38,10 @@ class MiniProgram extends OpenPlatform
             if (!empty($version['exp_info'])) {
                 $version['exp_info']['exp_qrcode'] = base64_encode($this->getExpQrCode($appid));
             }
-            $version['audit_info'] = $this->getLatestAuditStatus($appid);
+            $lastAuditResult = $this->getLatestAuditStatus($appid);
+            if ($lastAuditResult['errcode'] == 0) {
+                $version['audit_info'] = $lastAuditResult;
+            }
             $result['version'] = $version;
             $result['code_template'] = $this->getTemplate();
             /*        $json = [
