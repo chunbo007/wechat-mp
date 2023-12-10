@@ -30,6 +30,24 @@ class OpenPlatform extends BaseServices {
             'secret' => $platform['secret'],
             'token' => $platform['token'],
             'aes_key' => $platform['aes_key'],
+            'debug' => true,
+            'log' => [
+                'default' => 'dev', // 默认使用的 channel，生产环境可以改为下面的 prod
+                'channels' => [
+                    // 测试环境
+                    'dev' => [
+                        'driver' => 'single',
+                        'path' => runtime_path("logs/wechat-" . date('Y-m-d') . ".log"),
+                        'level' => 'debug',
+                    ],
+                    // 生产环境
+                    'prod' => [
+                        'driver' => 'daily',
+                        'path' => 'D:/php/webman/runtime/logs/workerman.log',
+                        'level' => 'info',
+                    ],
+                ],
+            ],
         ]);
     }
 

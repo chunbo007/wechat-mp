@@ -54,10 +54,9 @@ class MiniProgram extends OpenPlatform
                     ];
                     $version['audit_info'] = $json;*/
             return $result;
-        } catch (BadRequestHttpException $exception) {
+        } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
         }
-
     }
 
     public function getToken($appid): array
@@ -139,4 +138,33 @@ class MiniProgram extends OpenPlatform
         return $this->getMiniProgram($appid)->code->commit($template_id, $ext_json, $user_version, $user_desc);
     }
 
+    public function getCategory($appid)
+    {
+        return $this->getMiniProgram($appid)->code->getCategory();
+    }
+
+    public function submitAudit($appid, $data)
+    {
+        return $this->getMiniProgram($appid)->code->submitAudit($data);
+    }
+
+    public function undoAudit($appid)
+    {
+        return $this->getMiniProgram($appid)->code->withdrawAudit();
+    }
+
+    public function speedupCodeAudit($appid, $auditid)
+    {
+        return $this->getMiniProgram($appid)->code->speedupAudit((int)$auditid);
+    }
+
+    public function release($appid)
+    {
+        return $this->getMiniProgram($appid)->code->release();
+    }
+
+    public function revertCodeRelease($appid)
+    {
+        return $this->getMiniProgram($appid)->code->rollbackRelease();
+    }
 }

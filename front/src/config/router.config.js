@@ -147,6 +147,12 @@ export const asyncRouterMap = [
             component: () => import('@/views/authorizer/detail'),
             meta: {title: '版本管理', keepAlive: true, icon: bxAnaalyse},
           },
+          {
+            name: 'authorizer-audit',
+            path: '/authorizer/audit',
+            component: () => import('@/views/authorizer/submitAudit'),
+            meta: {title: '提交审核', keepAlive: true, icon: bxAnaalyse},
+          },
         ]
       },
       // platform
