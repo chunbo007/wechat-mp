@@ -2,9 +2,12 @@
 namespace app\common\service\wechat;
 
 use app\admin\model\Authorizers;
+use app\common\model\WxcallbackBiz;
+use app\common\model\WxcallbackComponent;
 use app\common\service\BaseServices;
 use EasyWeChat\Factory;
 use EasyWeChat\OpenPlatform\Application;
+use support\Log;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use think\db\exception\DataNotFoundException;
@@ -32,7 +35,7 @@ class OpenPlatform extends BaseServices {
             'aes_key' => $platform['aes_key'],
             'debug' => true,
             'log' => [
-                'default' => 'dev', // 默认使用的 channel，生产环境可以改为下面的 prod
+                'default' => env('APP_DEBUG') ? 'dev' : 'prod', // 默认使用的 channel，生产环境可以改为下面的 prod
                 'channels' => [
                     // 测试环境
                     'dev' => [
@@ -43,7 +46,7 @@ class OpenPlatform extends BaseServices {
                     // 生产环境
                     'prod' => [
                         'driver' => 'daily',
-                        'path' => 'D:/php/webman/runtime/logs/workerman.log',
+                        'path' => runtime_path("logs/wechat-" . date('Y-m-d') . ".log"),
                         'level' => 'info',
                     ],
                 ],
@@ -54,17 +57,30 @@ class OpenPlatform extends BaseServices {
     /**
      * 处理开放平台消息
      * @param $request
+     * @param string $appid
      * @return false|string
      */
-    public function handle($request)
+    public function handle($request, string $appid = '')
     {
+        // https://zhuanlan.zhihu.com/p/659727799 授权事件、消息与事件通知
         try {
             $symfony_request = new SymfonyRequest($request->get(), $request->post(), [], $request->cookie(), [], [], $request->rawBody());
             $symfony_request->headers = new HeaderBag($request->header());
             $this->app->rebind('request', $symfony_request);
+            $this->app->server->push(function ($message) use ($appid) {
+                if (isset($message['InfoType'])) {
+                    // 授权事件 日志记录
+                    $this->addComponentCallBackRecord($message);
+                } else if (isset($message['MsgType'])) {
+                    // 消息与事件通知 日志记录
+                    $this->addWxcallbackBizRecord($message, $appid);
+                }
+            });
+
             $response = $this->app->server->serve();
             return $response->getContent();
         } catch (\Exception $e){
+            Log::error($e->getMessage());
             return $e->getMessage();
         }
     }
@@ -118,5 +134,30 @@ class OpenPlatform extends BaseServices {
     public function getTemplate()
     {
         return $this->app->code_template->list();
+    }
+
+    private function addComponentCallBackRecord($data)
+    {
+        $row = [
+            'appid' => $data['AppId'],
+            'authorizer_appid' => $data['AuthorizerAppid'] ?? null,
+            'infotype' => $data['InfoType'],
+            'postbody' => json_encode($data),
+            'receivetime' => $data['CreateTime']
+        ];
+        WxcallbackComponent::create($row);
+    }
+
+    private function addWxcallbackBizRecord($data, $appid)
+    {
+        $row = [
+            'appid' => $appid,
+            'tousername' => $data['ToUserName'],
+            'msgtype' => $data['MsgType'],
+            'event' => $data['Event'],
+            'postbody' => json_encode($data),
+            'receivetime' => $data['CreateTime']
+        ];
+        WxcallbackBiz::create($row);
     }
 }

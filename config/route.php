@@ -14,7 +14,8 @@
 
 use Webman\Route;
 
-
+// 微信授权事件、消息与事件通知回调
+Route::any('/wechat[/{appid}]', [app\wechat\controller\IndexController::class, 'index']);
 
 
 

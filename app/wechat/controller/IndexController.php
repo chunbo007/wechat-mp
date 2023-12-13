@@ -3,7 +3,6 @@
 namespace app\wechat\controller;
 
 use app\admin\model\Platform;
-use app\common\service\wechat\MiniProgram;
 use app\common\service\wechat\OpenPlatform;
 use support\Request;
 use Tinywan\ExceptionHandler\Exception\BadRequestHttpException;
@@ -14,7 +13,7 @@ class IndexController
      * 处理微信平台消息入口
      * @throws BadRequestHttpException
      */
-    public function index(Request $request)
+    public function index(Request $request, $appid = '')
     {
         try {
             $xml = $request->rawBody();
@@ -23,18 +22,10 @@ class IndexController
             $appId = (string)$xml->AppId;
             $platform = Platform::where('app_id', $appId)->find();
             $app = new OpenPlatform($platform['id']);
-            return $app->handle($request);
+            return $app->handle($request, $appid);
         } catch (\Exception $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
 
-    }
-
-    public function test()
-    {
-        $appId = 'wx3a67b967164b59d1';
-        $openPlatformConfig = Platform::where('app_id', $appId)->find();
-        $app = new MiniProgram($openPlatformConfig);
-        return success($app->test());
     }
 }
