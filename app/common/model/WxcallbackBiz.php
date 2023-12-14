@@ -7,5 +7,11 @@ namespace app\common\model;
  */
 class WxcallbackBiz extends BaseModel
 {
+    static protected array $column = [
+        ['key' => 'appid', 'name' => 'appid'],
+        ['key' => 'msgtype', 'name' => 'msgtype'],
+        ['key' => 'event', 'name' => 'event'],
+        ['key' => 'receivetime', 'name' => 'receivetime', 'where' => 'time_range'],
+    ];
     protected $table = 'wxcallback_biz';
 }

@@ -161,6 +161,13 @@ export const asyncRouterMap = [
         path: '/platform',
         component: () => import('@/views/platform/account'),
         meta: {title: '开放平台', keepAlive: true, icon: bxAnaalyse}
+      },
+      // message
+      {
+        name: 'message',
+        path: '/message',
+        component: () => import('@/views/message/log'),
+        meta: {title: '消息日志', keepAlive: true, icon: bxAnaalyse}
       }
     ]
   },

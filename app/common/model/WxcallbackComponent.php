@@ -7,5 +7,10 @@ namespace app\common\model;
  */
 class WxcallbackComponent extends BaseModel
 {
+    static protected array $column = [
+        ['key' => 'appid', 'name' => 'appid'],
+        ['key' => 'infotype', 'name' => 'infotype'],
+        ['key' => 'receivetime', 'name' => 'receivetime', 'where' => 'time_range'],
+    ];
     protected $table = 'wxcallback_component';
 }
