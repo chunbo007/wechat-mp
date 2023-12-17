@@ -9,6 +9,7 @@ const api = {
   SpeedupCodeAudit: '/miniprogram/speedupCodeAudit',
   release: '/miniprogram/release',
   RevertCodeRelease: '/miniprogram/revertCodeRelease',
+  SetDomain: '/miniprogram/setDomain',
 }
 
 export function getDetail(parameter) {
@@ -70,6 +71,14 @@ export function release(parameter) {
 export function revertCodeRelease(parameter) {
   return request({
     url: api.RevertCodeRelease,
+    method: 'post',
+    data: parameter
+  })
+}
+
+export function setDomain(parameter) {
+  return request({
+    url: api.SetDomain,
     method: 'post',
     data: parameter
   })

@@ -30,3 +30,10 @@ Vue.filter('truncate', function (value, limit = 10) {
   }
   return value;
 })
+
+Vue.filter('join', function (value, separate = ',') {
+  if (Array.isArray(value)) {
+    return value.join(separate);
+  }
+  return value
+})

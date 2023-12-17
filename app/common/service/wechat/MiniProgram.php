@@ -44,18 +44,6 @@ class MiniProgram extends OpenPlatform
             }
             $result['version'] = $version;
             $result['code_template'] = $this->getTemplate();
-            /*        $json = [
-                        'errcode' => 0,
-                        'errmsg'  => 'ok',
-                        'auditid' => 1234567,
-                        'status'  => 4,
-                        'reason'  => '账号信息不合规范',
-                        'ScreenShot' => 'xx|yy|zz',
-                        'user_version' => 'V1.5',
-                        'user_desc' => 'xxx',
-                        'submit_audit_time' => '1640763673'
-                    ];
-                    $version['audit_info'] = $json;*/
             return $result;
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
@@ -169,5 +157,11 @@ class MiniProgram extends OpenPlatform
     public function revertCodeRelease($appid)
     {
         return $this->getMiniProgram($appid)->code->rollbackRelease();
+    }
+
+    public function setDomain($appid, $params)
+    {
+        $params['action'] = 'set';
+        return $this->getMiniProgram($appid)->domain->modify($params);
     }
 }

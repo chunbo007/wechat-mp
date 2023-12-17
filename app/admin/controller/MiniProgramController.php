@@ -85,4 +85,20 @@ class MiniProgramController extends BaseController
         $result = $miniprogram->revertCodeRelease($row['appid']);
         return json(['code' => $result['errcode'], 'msg' => $result['errmsg']]);
     }
+
+    public function setDomain(Request $request)
+    {
+        $request_params = $request->post();
+        $id = $request_params['id'];
+        unset($request_params['id']);
+        $row = Authorizers::where('id', $id)->find();
+        $miniprogram = new MiniProgram($row['platform_id']);
+        $result = $miniprogram->setDomain($row['appid'], $request_params);
+        if ($result['errcode'] == '0') {
+            // 如果修改成功，需要重新获取小程序资料
+            $authorizer_info = $miniprogram->app->getAuthorizer($row['appid']);
+            Authorizers::where('id', $id)->update(['json_data' => json_encode($authorizer_info)]);
+        }
+        return json(['code' => $result['errcode'], 'msg' => $result['errmsg']]);
+    }
 }
