@@ -10,6 +10,7 @@ const api = {
   release: '/miniprogram/release',
   RevertCodeRelease: '/miniprogram/revertCodeRelease',
   SetDomain: '/miniprogram/setDomain',
+  getPcAuthorizerUrl: '/miniprogram/getPcAuthorizerUrl',
 }
 
 export function getDetail(parameter) {
@@ -79,6 +80,14 @@ export function revertCodeRelease(parameter) {
 export function setDomain(parameter) {
   return request({
     url: api.SetDomain,
+    method: 'post',
+    data: parameter
+  })
+}
+
+export function getPcAuthorizerUrl(parameter) {
+  return request({
+    url: api.getPcAuthorizerUrl,
     method: 'post',
     data: parameter
   })

@@ -4,6 +4,7 @@ namespace app\admin\controller;
 
 use app\admin\model\Authorizers;
 use app\common\service\wechat\MiniProgram;
+use app\common\service\wechat\OpenPlatform;
 use support\Request;
 
 class MiniProgramController extends BaseController
@@ -101,4 +102,13 @@ class MiniProgramController extends BaseController
         }
         return json(['code' => $result['errcode'], 'msg' => $result['errmsg']]);
     }
+
+    public function getPcAuthorizerUrl(Request $request)
+    {
+        $id = $request->post('id');
+        $open_platform = new OpenPlatform($id);
+        $data = $open_platform->getPcAuthorizerUrl();
+        return success($data);
+    }
+
 }

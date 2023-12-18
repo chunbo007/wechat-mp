@@ -28,4 +28,10 @@ class IndexController
         }
 
     }
+
+    public function authorizer(Request $request, $url = '')
+    {
+        $url = urldecode($url);
+        return "<a href='$url' target='_blank'>点击授权</a>";
+    }
 }

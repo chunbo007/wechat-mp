@@ -30,7 +30,8 @@
       </div>
 
       <div class="table-operator">
-        <a-button :disabled="refreshButton" icon="plus" type="primary" @click="refresh">刷新</a-button>
+        <a-button :disabled="refreshButton" icon="sync" type="primary" @click="refresh">刷新</a-button>
+        <a-button icon="plus" type="primary" @click="addAuthorizer">新增授权</a-button>
       </div>
 
       <s-table
@@ -89,6 +90,38 @@
         expanded
       ></json-viewer>
     </a-modal>
+    <a-modal
+      :footer="null"
+      :visible="addAuthorizerVisible"
+      title="新增授权"
+      width="600px"
+      @cancel="() => addAuthorizerVisible = false"
+    >
+      <a-card :loading="addAuthorizerLoading">
+        <a-row>
+          <a-col :span="8">
+            PC 版授权链接
+          </a-col>
+          <a-col :span="8">
+            在电脑浏览器里打开后，使用微信扫码
+          </a-col>
+          <a-col :span="8" style="text-align: center">
+            <a target="_blank" @click="onCopy(pcAuthorizerUrl)">复制链接</a>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="8">
+            H5 版授权链接
+          </a-col>
+          <a-col :span="8">
+            在手机微信里直接访问授权链接
+          </a-col>
+          <a-col :span="8" style="text-align: center">
+            <a target="_blank" @click="onCopy(mobileAuthorizerUrl)">复制链接</a>
+          </a-col>
+        </a-row>
+      </a-card>
+    </a-modal>
   </page-header-wrapper>
 </template>
 
@@ -96,7 +129,8 @@
 import data from "@/config/data";
 import {Ellipsis, STable} from '@/components'
 import {getAuthorizer, getRefreshToken, getToken, originalMessage, refresh} from '@/api/authorizer'
-import Message from "ant-design-vue/lib/message";
+import {getPcAuthorizerUrl} from '@/api/miniprogram'
+import Message from "ant-design-vue/lib/message"
 import JsonViewer from 'vue-json-viewer'
 import {mapState} from "vuex";
 
@@ -211,6 +245,11 @@ export default {
       // 刷新按钮
       refreshButton: false,
       jsonDataVisible: false,
+      // 新增按钮
+      addAuthorizerVisible: false,
+      addAuthorizerLoading: false,
+      pcAuthorizerUrl: null,
+      mobileAuthorizerUrl: null,
     }
   },
   created() {
@@ -287,7 +326,28 @@ export default {
           id: id
         }
       })
-    }
+    },
+
+    addAuthorizer() {
+      this.addAuthorizerLoading = true
+      this.addAuthorizerVisible = true
+      getPcAuthorizerUrl({id: this.currentPlatform.id}).then(res => {
+        this.pcAuthorizerUrl = res.data['pc_url']
+        this.mobileAuthorizerUrl = res.data['mobile_url']
+      }).finally(() => {
+        this.addAuthorizerLoading = false
+      })
+    },
+
+    onCopy(text) {
+      navigator.clipboard.writeText(window.location.origin + text)
+        .then(() => {
+          Message.success('复制成功，发送给用户打开完成授权')
+        })
+        .catch((error) => {
+          Message.error('复制失败' + error)
+        });
+    },
   }
 }
 </script>
