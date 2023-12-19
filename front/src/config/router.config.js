@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import {BasicLayout, UserLayout} from '@/layouts'
+import {BasicLayout, BlankLayout, UserLayout} from '@/layouts'
 // eslint-disable-next-line
 import {bxAnaalyse} from '@/core/icons'
 
@@ -208,6 +208,25 @@ export const constantRouterMap = [
         path: 'recover',
         name: 'recover',
         component: undefined
+      }
+    ]
+  },
+
+  // wechat authorizer
+  {
+    name: 'wechat',
+    path: '/wechat',
+    component: BlankLayout,
+    children: [
+      {
+        path: 'authorizer',
+        name: 'wx-authorizer',
+        component: () => import('@/views/wechat/Authorizer')
+      },
+      {
+        path: 'callback',
+        name: 'wx-callback',
+        component: () => import('@/views/wechat/Callback')
       }
     ]
   },

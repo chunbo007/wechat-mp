@@ -340,7 +340,7 @@ export default {
     },
 
     onCopy(text) {
-      navigator.clipboard.writeText(window.location.origin + text)
+      navigator.clipboard.writeText(window.location.origin + '/wechat/authorizer?url=' + text)
         .then(() => {
           Message.success('复制成功，发送给用户打开完成授权')
         })

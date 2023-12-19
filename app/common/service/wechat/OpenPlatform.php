@@ -164,11 +164,11 @@ class OpenPlatform extends BaseServices {
     public function getPcAuthorizerUrl()
     {
         $pre_code = $this->app->createPreAuthorizationCode();
-        $pc_url = $this->app->getPreAuthorizationUrl('https://f9e5-117-154-106-86.ngrok-free.app/callback', $pre_code);
-        $mobile_url = $this->app->getMobilePreAuthorizationUrl('https://f9e5-117-154-106-86.ngrok-free.app/callback', $pre_code);
+        $pc_url = $this->app->getPreAuthorizationUrl(env('WECHAT_CALLBACK'), $pre_code);
+        $mobile_url = $this->app->getMobilePreAuthorizationUrl(env('WECHAT_CALLBACK'), $pre_code);
         return [
-            'pc_url' => route('wechat.authorizer', ['url' => urlencode($pc_url)]),
-            'mobile_url' => route('wechat.authorizer', ['url' => urlencode($mobile_url)]),
+            'pc_url' => urlencode($pc_url),
+            'mobile_url' => urlencode($mobile_url)
         ];
     }
 }
