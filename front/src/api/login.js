@@ -10,7 +10,8 @@ const userApi = {
   SendSmsErr: '/account/sms_err',
   // get my info
   UserInfo: '/user/info',
-  UserMenu: '/user/nav'
+  UserMenu: '/user/nav',
+  ChangePassword: '/user/changePassword'
 }
 
 /**
@@ -74,6 +75,14 @@ export function logout () {
 export function get2step (parameter) {
   return request({
     url: userApi.twoStepCode,
+    method: 'post',
+    data: parameter
+  })
+}
+
+export function changePassword(parameter) {
+  return request({
+    url: userApi.ChangePassword,
     method: 'post',
     data: parameter
   })
