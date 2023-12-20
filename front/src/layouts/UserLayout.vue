@@ -10,7 +10,7 @@
           <div class="header">
             <a href="/">
               <img src="~@/assets/logo.svg" class="logo" alt="logo">
-              <span class="title">Ant Design</span>
+              <span class="title">Wechat Mp</span>
             </a>
           </div>
           <div class="desc">
@@ -22,12 +22,12 @@
 
         <div class="footer">
           <div class="links">
-            <a href="_self">帮助</a>
-            <a href="_self">隐私</a>
-            <a href="_self">条款</a>
+            <!--            <a href="_self">帮助</a>-->
+            <!--            <a href="_self">隐私</a>-->
+            <!--            <a href="_self">条款</a>-->
           </div>
           <div class="copyright">
-            Copyright &copy; 2018 vueComponent
+            Copyright &copy; 2024 wechat-mp
           </div>
         </div>
       </div>
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { deviceMixin } from '@/store/device-mixin'
+import {deviceMixin} from '@/store/device-mixin'
 import SelectLang from '@/components/SelectLang'
 
 export default {
