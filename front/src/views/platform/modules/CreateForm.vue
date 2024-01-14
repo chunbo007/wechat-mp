@@ -2,7 +2,7 @@
   <a-modal
     :confirmLoading="loading"
     :visible="visible"
-    :width="640"
+    :width="800"
     :title="this.model ? '编辑' : '新增'"
     @cancel="() => { $emit('cancel') }"
     @ok="() => { $emit('ok') }"
@@ -28,6 +28,15 @@
         <a-form-item label="aes_key">
           <a-input v-decorator="['aes_key', {rules: [{required: true, message: '请输入aes_key'}]}]"/>
         </a-form-item>
+        <a-form-item extra="转发授权事件：验证票据、授权成功、取消授权、授权更新、快速注册企业小程序、快速注册个人小程序、注册试用小程序、试用小程序快速认证、发起小程序管理员人脸核身、申请小程序备案"
+                     label="转发授权事件URL">
+          <a-input v-decorator="['forward_platform']"/>
+        </a-form-item>
+        <a-form-item extra="转发消息与事件：设置小程序名称、添加类目、提交代码审核、审核结果 会向URL进行事件推送，该参数按规则填写（需包含/$APPID$，如https://www.abc.com/$APPID$/callback），实际接收消息时$APPID$将被替换为公众号或小程序AppId"
+                     label="转发消息与事件URL">
+          <a-input
+            v-decorator="['forward_app', {rules: [{validator: validateForwardApp, message: '转发消息与事件URL需包含$APPID$'}]}]"/>
+        </a-form-item>
         <a-form-item label="设为默认">
           <a-switch v-decorator="['is_default', { valuePropName: 'checked' }]"/>
         </a-form-item>
@@ -40,7 +49,7 @@
 import pick from 'lodash.pick'
 
 // 表单字段
-const fields = ['id', 'name', 'app_id', 'secret', 'token', 'aes_key', 'is_default']
+const fields = ['id', 'name', 'app_id', 'secret', 'token', 'aes_key', 'forward_platform', 'forward_app', 'is_default']
 
 export default {
   props: {
@@ -71,6 +80,20 @@ export default {
     return {
       form: this.$form.createForm(this)
     }
+  },
+  methods: {
+    validateForwardApp(rule, value, callback) {
+      // 校验新密码和原始密码是否相等
+      console.log(value)
+      console.log(value.indexOf('$APPID$'))
+      // callback();
+
+      if (value.indexOf('$APPID$') === -1) {
+        callback('转发消息与事件URL需包含$APPID$');
+      } else {
+        callback();
+      }
+    },
   },
   created() {
     // 防止表单未注册

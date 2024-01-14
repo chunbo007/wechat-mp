@@ -120,3 +120,19 @@ CREATE TABLE `wxtoken`
     UNIQUE KEY `appid_uindex` (`appid`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
+
+-- 消息转发日志
+CREATE TABLE `wxcallback_forward`
+(
+    `id`          int(10) unsigned NOT NULL AUTO_INCREMENT,
+    `appid`       varchar(32)      NOT NULL COMMENT '第三方平台appid',
+    `url`         varchar(255)     NOT NULL COMMENT '转发地址',
+    `params`      text             NOT NULL COMMENT '转发内容',
+    `response`    varchar(255) DEFAULT NULL COMMENT '响应结果',
+    `create_time` int(11)          NOT NULL,
+    `update_time` int(11)          NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `receivetime` (`create_time`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 240
+  DEFAULT CHARSET = utf8 COMMENT ='请求转发日志';

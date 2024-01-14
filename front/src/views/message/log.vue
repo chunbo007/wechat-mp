@@ -8,6 +8,9 @@
         <a-tab-pane key="2" force-render tab="普通消息与事件">
           <event/>
         </a-tab-pane>
+        <a-tab-pane key="3" force-render tab="转发日志">
+          <forward/>
+        </a-tab-pane>
       </a-tabs>
     </a-card>
   </page-header-wrapper>
@@ -17,7 +20,8 @@
 import {Ellipsis, STable} from '@/components'
 import moment from 'moment'
 import event from '@/views/message/modules/event'
-import authorizer from "@/views/message/modules/authorizer.vue";
+import authorizer from "@/views/message/modules/authorizer";
+import forward from "@/views/message/modules/forward";
 
 export default {
   name: 'log',
@@ -25,7 +29,8 @@ export default {
     STable,
     Ellipsis,
     event,
-    authorizer
+    authorizer,
+    forward
   },
   data() {
     return {}

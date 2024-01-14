@@ -18,4 +18,9 @@ class Authorizers extends BaseModel
     {
         return date('Y-m-d H:i:s', $value);
     }
+
+    public function platform(): \think\model\relation\BelongsTo
+    {
+        return $this->belongsTo('\app\common\model\Platform', 'platform_id', 'id');
+    }
 }
