@@ -14,6 +14,7 @@
 
 use Webman\Route;
 
+Route::any('/wechat/getToken', [app\wechat\controller\IndexController::class, 'getToken']);
 // 发起微信授权
 Route::any('/wechat/authorizer/{url}', [app\wechat\controller\IndexController::class, 'authorizer'])->name('wechat.authorizer');
 // 微信授权事件、消息与事件通知回调

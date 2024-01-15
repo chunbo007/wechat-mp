@@ -37,6 +37,9 @@
           <a-input
             v-decorator="['forward_app', {rules: [{validator: validateForwardApp, message: '转发消息与事件URL需包含$APPID$'}]}]"/>
         </a-form-item>
+        <a-form-item label="外部平台解密secret">
+          <a-input v-decorator="['third_secret']"/>
+        </a-form-item>
         <a-form-item label="设为默认">
           <a-switch v-decorator="['is_default', { valuePropName: 'checked' }]"/>
         </a-form-item>
@@ -49,7 +52,7 @@
 import pick from 'lodash.pick'
 
 // 表单字段
-const fields = ['id', 'name', 'app_id', 'secret', 'token', 'aes_key', 'forward_platform', 'forward_app', 'is_default']
+const fields = ['id', 'name', 'app_id', 'secret', 'token', 'aes_key', 'forward_platform', 'forward_app', 'third_secret', 'is_default']
 
 export default {
   props: {
@@ -84,11 +87,7 @@ export default {
   methods: {
     validateForwardApp(rule, value, callback) {
       // 校验新密码和原始密码是否相等
-      console.log(value)
-      console.log(value.indexOf('$APPID$'))
-      // callback();
-
-      if (value.indexOf('$APPID$') === -1) {
+      if (value && value.indexOf('$APPID$') === -1) {
         callback('转发消息与事件URL需包含$APPID$');
       } else {
         callback();

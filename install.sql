@@ -25,7 +25,6 @@ CREATE TABLE `authorizers`
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE KEY `appid` (`appid`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 79
   DEFAULT CHARSET = utf8;
 
 -- 存储ticket、第三方信息等
@@ -42,19 +41,21 @@ CREATE TABLE `comm`
 -- 存储平台信息
 CREATE TABLE `platform`
 (
-    `id`          int(10) unsigned                    NOT NULL AUTO_INCREMENT,
-    `name`        varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-    `app_id`      varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-    `secret`      varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-    `token`       varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-    `aes_key`     varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-    `is_default`  tinyint(1) unsigned                 NOT NULL DEFAULT '0',
-    `create_time` int(11) unsigned                    NOT NULL,
-    `update_time` int(11) unsigned                    NOT NULL,
+    `id`               int(10) unsigned                    NOT NULL AUTO_INCREMENT,
+    `name`             varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+    `app_id`           varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+    `secret`           varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+    `token`            varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+    `aes_key`          varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+    `forward_platform` varchar(50) COLLATE utf8_unicode_ci          DEFAULT NULL COMMENT '转发授权事件：授权事件推送包括：验证票据、授权成功、取消授权、授权更新、快速注册企业小程序、快速注册个人小程序、注册试用小程序、试用小程序快速认证、发起小程序管理员人脸核身、申请小程序备案',
+    `forward_app`      varchar(50) COLLATE utf8_unicode_ci          DEFAULT NULL COMMENT '消息与事件推送包括：设置小程序名称、添加类目、提交代码审核。审核结果会向消息与事件接收 URL 进行事件推送',
+    `third_secret`     char(32) COLLATE utf8_unicode_ci             DEFAULT NULL COMMENT '外部平台解密数据时的secret',
+    `is_default`       tinyint(1) unsigned                 NOT NULL DEFAULT '0',
+    `create_time`      int(11) unsigned                    NOT NULL,
+    `update_time`      int(11) unsigned                    NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `app_id` (`app_id`) USING BTREE
-) ENGINE = MyISAM
-  AUTO_INCREMENT = 6
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   COLLATE = utf8_unicode_ci;
 
@@ -69,7 +70,6 @@ CREATE TABLE `user`
     PRIMARY KEY (`id`),
     UNIQUE KEY `user_username_uindex` (`username`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 3
   DEFAULT CHARSET = utf8;
 
 -- 推送给消息与事件URL的消息
@@ -103,7 +103,6 @@ CREATE TABLE `wxcallback_component`
     PRIMARY KEY (`id`),
     KEY `receivetime` (`create_time`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 78
   DEFAULT CHARSET = utf8;
 
 -- component_access_token和authorizer_access_token
@@ -134,5 +133,4 @@ CREATE TABLE `wxcallback_forward`
     PRIMARY KEY (`id`),
     KEY `receivetime` (`create_time`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 240
   DEFAULT CHARSET = utf8 COMMENT ='请求转发日志';
