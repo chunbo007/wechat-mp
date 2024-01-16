@@ -63,15 +63,26 @@
         </span>
         <span slot="action" slot-scope="_, row">
           <template>
-            <a @click="getToken(row.appid)">获取token</a>
-            <a-divider type="vertical"/>
-            <a @click="getRefreshToken(row.appid)">复制refresh_token</a>
-            <a-divider type="vertical"/>
             <a @click="originalMessage(row.appid)">原始报文</a>
             <template v-if="row.app_type === 1">
             <a-divider type="vertical"/>
             <a @click="detail(row.id)">版本管理</a>
             </template>
+            <a-divider type="vertical"/>
+            <a-dropdown>
+              <a-menu slot="overlay">
+                <a-menu-item>
+                  <a @click="getToken(row.appid)">获取token</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a @click="getTokenLink(row.appid)">获取token外链</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a @click="getRefreshToken(row.appid)">复制refresh_token</a>
+                </a-menu-item>
+              </a-menu>
+              <a>更多<a-icon type="down"/></a>
+            </a-dropdown>
           </template>
         </span>
       </s-table>
@@ -206,7 +217,7 @@ const columns = [
   {
     title: '操作',
     dataIndex: 'action',
-    width: 400,
+    width: 250,
     fixed: 'right',
     scopedSlots: {customRender: 'action'}
   }
@@ -288,6 +299,17 @@ export default {
           });
       }).finally(() => {
       })
+    },
+
+    getTokenLink(appid) {
+      const url = window.location.origin + '/wechat/getToken?platform_appid=' + this.currentPlatform['app_id'] + '&appid=' + appid
+      navigator.clipboard.writeText(url)
+        .then(() => {
+          Message.success('复制成功')
+        })
+        .catch((error) => {
+          Message.error('复制失败' + error)
+        });
     },
 
     getRefreshToken(appid) {
