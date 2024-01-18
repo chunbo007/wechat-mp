@@ -516,6 +516,11 @@ function cpu_count(): int
     return $count > 0 ? $count : 4;
 }
 
+/**
+ * @param string $key
+ * @param $default
+ * @return array|bool|mixed|string|null
+ */
 function env(string $key, $default = null)
 {
     $value = getenv($key);

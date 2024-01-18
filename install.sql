@@ -27,17 +27,6 @@ CREATE TABLE `authorizers`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
--- 存储ticket、第三方信息等
-CREATE TABLE `comm`
-(
-    `key`        varchar(64) NOT NULL,
-    `value`      text        NOT NULL,
-    `createtime` timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updatetime` timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`key`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
 -- 存储平台信息
 CREATE TABLE `platform`
 (
@@ -62,11 +51,11 @@ CREATE TABLE `platform`
 -- 用户表
 CREATE TABLE `user`
 (
-    `id`         int(11)     NOT NULL AUTO_INCREMENT,
-    `username`   varchar(32) NOT NULL,
-    `password`   varchar(64) NOT NULL,
-    `createtime` timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updatetime` timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `id`          int(11)     NOT NULL AUTO_INCREMENT,
+    `username`    varchar(32) NOT NULL,
+    `password`    varchar(64) NOT NULL,
+    `create_time` int(11)     NOT NULL,
+    `update_time` int(11)     NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `user_username_uindex` (`username`)
 ) ENGINE = InnoDB
@@ -105,21 +94,6 @@ CREATE TABLE `wxcallback_component`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
--- component_access_token和authorizer_access_token
-CREATE TABLE `wxtoken`
-(
-    `id`         int(10) unsigned NOT NULL AUTO_INCREMENT,
-    `type`       int(11)          NOT NULL DEFAULT '0',
-    `appid`      varchar(128)     NOT NULL DEFAULT '',
-    `token`      text             NOT NULL,
-    `expiretime` timestamp        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `createtime` timestamp        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updatetime` timestamp        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `appid_uindex` (`appid`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
 -- 消息转发日志
 CREATE TABLE `wxcallback_forward`
 (
@@ -134,3 +108,6 @@ CREATE TABLE `wxcallback_forward`
     KEY `receivetime` (`create_time`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT ='请求转发日志';
+
+INSERT INTO `wechat_mp`.`user` (`id`, `username`, `password`, `createtime`, `updatetime`)
+VALUES (1, 'admin', '21232f297a57a5a743894a0e4a801fc3', '2024-01-18 23:17:23', '2024-01-13 23:50:17');
