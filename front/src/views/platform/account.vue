@@ -56,6 +56,7 @@
         rowKey="id"
         showPagination="auto"
         size="default"
+        :scroll="{ x: 1000 }"
       >
         <span slot="is_default" slot-scope="text, record">
           {{ enumData['true_or_false'][text] }}
