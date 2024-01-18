@@ -30,18 +30,20 @@ CREATE TABLE `authorizers`
 -- 存储平台信息
 CREATE TABLE `platform`
 (
-    `id`               int(10) unsigned                    NOT NULL AUTO_INCREMENT,
-    `name`             varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-    `app_id`           varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-    `secret`           varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-    `token`            varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-    `aes_key`          varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-    `forward_platform` varchar(50) COLLATE utf8_unicode_ci          DEFAULT NULL COMMENT '转发授权事件：授权事件推送包括：验证票据、授权成功、取消授权、授权更新、快速注册企业小程序、快速注册个人小程序、注册试用小程序、试用小程序快速认证、发起小程序管理员人脸核身、申请小程序备案',
-    `forward_app`      varchar(50) COLLATE utf8_unicode_ci          DEFAULT NULL COMMENT '消息与事件推送包括：设置小程序名称、添加类目、提交代码审核。审核结果会向消息与事件接收 URL 进行事件推送',
-    `third_secret`     char(32) COLLATE utf8_unicode_ci             DEFAULT NULL COMMENT '外部平台解密数据时的secret',
-    `is_default`       tinyint(1) unsigned                 NOT NULL DEFAULT '0',
-    `create_time`      int(11) unsigned                    NOT NULL,
-    `update_time`      int(11) unsigned                    NOT NULL,
+    `id`                      int(10) unsigned                    NOT NULL AUTO_INCREMENT,
+    `name`                    varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+    `app_id`                  varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+    `secret`                  varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+    `token`                   varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+    `aes_key`                 varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+    `forward_platform`        varchar(50) COLLATE utf8_unicode_ci          DEFAULT NULL COMMENT '转发授权事件：授权事件推送包括：验证票据、授权成功、取消授权、授权更新、快速注册企业小程序、快速注册个人小程序、注册试用小程序、试用小程序快速认证、发起小程序管理员人脸核身、申请小程序备案',
+    `return_forward_platform` tinyint(1)                          NOT NULL DEFAULT '0' COMMENT '响应返回结果',
+    `forward_app`             varchar(50) COLLATE utf8_unicode_ci          DEFAULT NULL COMMENT '消息与事件推送包括：设置小程序名称、添加类目、提交代码审核。审核结果会向消息与事件接收 URL 进行事件推送',
+    `return_forward_app`      tinyint(1)                          NOT NULL COMMENT '响应返回结果',
+    `third_secret`            char(32) COLLATE utf8_unicode_ci             DEFAULT NULL COMMENT '外部平台解密数据时的secret',
+    `is_default`              tinyint(1) unsigned                 NOT NULL DEFAULT '0',
+    `create_time`             int(11) unsigned                    NOT NULL,
+    `update_time`             int(11) unsigned                    NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `app_id` (`app_id`) USING BTREE
 ) ENGINE = InnoDB

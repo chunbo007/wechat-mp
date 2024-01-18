@@ -127,7 +127,7 @@ const vueConfig = {
     // If you want to turn on the proxy, please remove the mockjs /src/main.jsL11
     proxy: {
       '/admin': {
-        target: 'http://localhost:8787',
+        target: 'http://localhost:8789',
         ws: false,
         changeOrigin: true
       }

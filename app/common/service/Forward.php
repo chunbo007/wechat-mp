@@ -17,7 +17,7 @@ class Forward extends BaseServices
      * @param Request $request
      * @param $appid
      * @param $type
-     * @return void
+     * @return bool|string
      * @throws DataNotFoundException
      * @throws DbException
      * @throws ModelNotFoundException
@@ -50,6 +50,13 @@ class Forward extends BaseServices
         $response = curl_exec($ch);
         curl_close($ch);
         self::writeLog($appid, $forwardUrl, $xml, $response);
+
+        if ($type == 'platform' && $forwardSetting['return_forward_platform']) {
+            return $response;
+        } elseif ($type == 'app' && $forwardSetting['return_forward_app']) {
+            return $response;
+        }
+        return false;
     }
 
     /**

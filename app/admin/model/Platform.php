@@ -52,6 +52,12 @@ class Platform extends PlatformModel
             if ($data['is_default']) {
                 self::where('is_default', 1)->update(['is_default' => 0]);
             }
+            if ($data['return_forward_platform']) {
+                self::where('return_forward_platform', 1)->update(['return_forward_platform' => 0]);
+            }
+            if ($data['return_forward_app']) {
+                self::where('return_forward_app', 1)->update(['return_forward_app' => 0]);
+            }
             self::update($data);
         } catch (\Exception $e) {
             throw new BadRequestHttpException($e->getMessage());

@@ -32,12 +32,22 @@
                      label="转发授权事件URL">
           <a-input v-decorator="['forward_platform']"/>
         </a-form-item>
+        <a-form-item extra="将转发授权事件URL的响应结果返回给平台" label="返回响应结果">
+          <a-checkbox v-decorator="['return_forward_platform', { valuePropName: 'checked' }]">
+            <!--            将转发授权事件URL的响应结果返回给平台-->
+          </a-checkbox>
+        </a-form-item>
         <a-form-item extra="转发消息与事件：设置小程序名称、添加类目、提交代码审核、审核结果 会向URL进行事件推送，该参数按规则填写（需包含/$APPID$，如https://www.abc.com/$APPID$/callback），实际接收消息时$APPID$将被替换为公众号或小程序AppId"
                      label="转发消息与事件URL">
           <a-input
             v-decorator="['forward_app', {rules: [{validator: validateForwardApp, message: '转发消息与事件URL需包含$APPID$'}]}]"/>
         </a-form-item>
-        <a-form-item label="外部平台解密secret">
+        <a-form-item extra="将转发消息与事件URL的响应结果返回给平台" label="返回响应结果">
+          <a-checkbox v-decorator="['return_forward_app', { valuePropName: 'checked' }]">
+            <!--            将转发消息与事件URL的响应结果返回给平台-->
+          </a-checkbox>
+        </a-form-item>
+        <a-form-item :label-col="formLayout.labelCol" :wrapper-col="formLayout.wrapperCol" label="第三方平台解密secret">
           <a-input v-decorator="['third_secret']"/>
         </a-form-item>
         <a-form-item label="设为默认">
@@ -52,7 +62,7 @@
 import pick from 'lodash.pick'
 
 // 表单字段
-const fields = ['id', 'name', 'app_id', 'secret', 'token', 'aes_key', 'forward_platform', 'forward_app', 'third_secret', 'is_default']
+const fields = ['id', 'name', 'app_id', 'secret', 'token', 'aes_key', 'forward_platform', 'forward_app', 'return_forward_platform', 'return_forward_app', 'third_secret', 'is_default']
 
 export default {
   props: {
@@ -70,18 +80,18 @@ export default {
     }
   },
   data() {
-    this.formLayout = {
-      labelCol: {
-        xs: {span: 24},
-        sm: {span: 7}
-      },
-      wrapperCol: {
-        xs: {span: 24},
-        sm: {span: 13}
-      }
-    }
     return {
-      form: this.$form.createForm(this)
+      form: this.$form.createForm(this),
+      formLayout: {
+        labelCol: {
+          xs: {span: 24},
+          sm: {span: 7}
+        },
+        wrapperCol: {
+          xs: {span: 24},
+          sm: {span: 13}
+        }
+      }
     }
   },
   methods: {
@@ -98,11 +108,18 @@ export default {
     // 防止表单未注册
     fields.forEach(v => this.form.getFieldDecorator(v, {}))
     this.form.getFieldDecorator('is_default', {})
+    this.form.getFieldDecorator('return_forward_platform', {})
+    this.form.getFieldDecorator('return_forward_app', {})
     // 当 model 发生改变时，为表单设置值
     this.$watch('model', () => {
       if (this.model) {
         this.form.setFieldsValue(pick(this.model, fields))
         this.form.setFieldsValue({is_default: this.model.is_default === 1})
+        this.form.setFieldsValue({
+          is_default: this.model.is_default === 1,
+          return_forward_platform: this.model.return_forward_platform === 1,
+          return_forward_app: this.model.return_forward_app === 1
+        })
       }
     })
   }
