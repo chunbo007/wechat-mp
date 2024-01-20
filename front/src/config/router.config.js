@@ -105,7 +105,7 @@ export const constantRouterMap = [
   // wechat authorizer
   {
     name: 'wechat',
-    path: '/wechat',
+    path: '/auth',
     component: BlankLayout,
     children: [
       {
