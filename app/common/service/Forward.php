@@ -72,7 +72,9 @@ class Forward extends BaseServices
         $authorizer = Platform::where('app_id', $platformAppid)->find();
         return [
             'forward_platform' => $authorizer->forward_platform,
+            'return_forward_platform' => $authorizer->return_forward_platform,
             'forward_app' => $authorizer->forward_app,
+            'return_forward_app' => $authorizer->return_forward_app,
         ];
     }
 
@@ -89,7 +91,9 @@ class Forward extends BaseServices
         $authorizer = Authorizers::with('platform')->where('appid', $appid)->find();
         return [
             'forward_platform' => $authorizer->platform->forward_platform,
+            'return_forward_platform' => $authorizer->platform->return_forward_platform,
             'forward_app' => $authorizer->platform->forward_app,
+            'return_forward_app' => $authorizer->platform->return_forward_app,
         ];
     }
 
