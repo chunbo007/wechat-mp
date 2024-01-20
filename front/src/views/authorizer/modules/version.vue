@@ -285,13 +285,13 @@ export default {
       })
     },
     release() {
-      release().then(() => {
+      release({id: this.id}).then(() => {
         Message.success('发布成功')
         this.getDetail(this.id)
       })
     },
     revertCodeRelease() {
-      revertCodeRelease().then(() => {
+      revertCodeRelease({id: this.id}).then(() => {
         Message.success('回滚成功')
         this.getDetail(this.id)
       })
