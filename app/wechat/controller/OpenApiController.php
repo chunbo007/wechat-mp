@@ -36,9 +36,9 @@ class OpenApiController
         $authorizer_access_token = $app->getToken($appid)['authorizer_access_token'];
 
         $result = [
-            'platform_id' => $platformAppId,
-            'app_id' => $appid,
+            'component_appid' => $platformAppId,
             'component_access_token' => $component_access_token,
+            'authorizer_appid' => $appid,
             'authorizer_access_token' => $authorizer_access_token
         ];
         return encrypt(json_encode($result), $platformSetting->third_secret);
