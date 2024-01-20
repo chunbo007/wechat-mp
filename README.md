@@ -16,6 +16,16 @@
 7. ...
 
 # 界面演示
+![授权管理](https://github.com/chunbo007/wechat-mp/assets/16535982/14700ac3-fea0-475e-a1e6-f3a6ebbec556)
+![版本管理](https://github.com/chunbo007/wechat-mp/assets/16535982/2dbe277d-77ab-4295-9755-9b39dcf3a9ca)
+![版本管理2](https://github.com/chunbo007/wechat-mp/assets/16535982/92cb9fc4-ace3-4fb8-93e3-f9a039b04e9e)
+![管理管理3](https://github.com/chunbo007/wechat-mp/assets/16535982/37abf340-e1c7-4538-895a-fe9ac767a14e)
+![开放平台](https://github.com/chunbo007/wechat-mp/assets/16535982/5a3ef41d-5257-4051-a450-2f67907d1fe5)
+![开放平台2](https://github.com/chunbo007/wechat-mp/assets/16535982/9d195873-62a2-4483-ae27-9fdb9b2166e0)
+![消息日志](https://github.com/chunbo007/wechat-mp/assets/16535982/7fa50073-c979-43c5-aaeb-30386f1ab1b6)
+![转发日志](https://github.com/chunbo007/wechat-mp/assets/16535982/9614e728-5a9e-4438-83d8-f736c2fbd17c)
+
+
 
 # 安装步骤
 
@@ -62,6 +72,12 @@
     
     location /wechat/ {
       proxy_pass http://127.0.0.1:8789/wechat/;
+      proxy_set_header   X-Forwarded-Proto $scheme;
+      proxy_set_header   X-Real-IP         $remote_addr;
+    }
+
+    location /openapi/ {
+      proxy_pass http://127.0.0.1:8789/openapi/;
       proxy_set_header   X-Forwarded-Proto $scheme;
       proxy_set_header   X-Real-IP         $remote_addr;
     }
