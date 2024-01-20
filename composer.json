@@ -47,7 +47,8 @@
       "app\\View\\Components\\": "./app/view/components"
     },
     "files": [
-      "./support/helpers.php"
+      "./support/helpers.php",
+      "./support/initialization.php"
     ]
   },
   "scripts": {
