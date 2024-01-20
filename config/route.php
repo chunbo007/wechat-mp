@@ -14,12 +14,14 @@
 
 use Webman\Route;
 
-Route::any('/wechat/getToken', [app\wechat\controller\IndexController::class, 'getToken']);
 // 发起微信授权
 Route::any('/wechat/authorizer/{url}', [app\wechat\controller\IndexController::class, 'authorizer'])->name('wechat.authorizer');
 // 微信授权事件、消息与事件通知回调
 Route::any('/wechat[/{appid}]', [app\wechat\controller\IndexController::class, 'index']);
 
-
-
-
+// openapi
+Route::group('/openapi', function () {
+    Route::get('/getToken', [app\wechat\controller\OpenApiController::class, 'getToken']);
+})->middleware(
+    app\wechat\middleware\OpenApiMiddleware::class
+);

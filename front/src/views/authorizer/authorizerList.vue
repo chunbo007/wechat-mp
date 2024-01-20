@@ -302,7 +302,7 @@ export default {
     },
 
     getTokenLink(appid) {
-      const url = window.location.origin + '/wechat/getToken?platform_appid=' + this.currentPlatform['app_id'] + '&appid=' + appid
+      const url = window.location.origin + '/openapi/getToken?platform_appid=' + this.currentPlatform['app_id'] + '&appid=' + appid
       navigator.clipboard.writeText(url)
         .then(() => {
           Message.success('复制成功')

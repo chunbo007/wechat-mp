@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dad11a64820c7df0160bac4d2bb6934a",
+    "content-hash": "bdcea27b1db52d1e355aecf5ace2fc22",
     "packages": [
         {
             "name": "easywechat-composer/easywechat-composer",
@@ -2668,8 +2668,10 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2",
-        "ext-simplexml": "*"
+        "php": ">=7.4",
+        "ext-simplexml": "*",
+        "ext-json": "*",
+        "ext-curl": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.6.0"
