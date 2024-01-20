@@ -7,7 +7,7 @@
 
 目前打算先实现以下功能
 
-1. 快速创建小程序
+1. 做为中台，为其他项目提供 authorizer_access_token
 2. 配置服务器域名
 3. 配置业务域名
 4. 上传小程序
@@ -15,3 +15,98 @@
 6. 发布小程序
 7. ...
 
+# 界面演示
+
+# 安装步骤
+
+1. 下载代码
+    ```
+    // github
+    git clone https://github.com/chunbo007/wechat-mp.git
+    
+    // gitee
+    git clone https://gitee.com/chunboli/wechat-mp.git
+    ```
+2. 安装相关依赖
+    ```
+    // 安装php相关依赖
+    cd wechat-mp
+    composer install
+    // 安装前端依赖
+    cd front
+    yarn install --production(推荐) 或 npm install --production
+    ```
+3. 配置文件
+   + 手动执行根目录下的 install.sql 导入数据库
+   + 复制根目录下的 .env.example 文件为 .env 文件，并修改相关配置
+4. 本地运行
+   + windows下运行 php windwos.php start
+   + linux下运行 php start.php start (用于开发调试)
+   + linux下后台运行 php start.php start -d (用于正式环境)
+
+   以上根据自己实际情况选择，然后运行前端项目
+   + 在 front 目录下执行 yarn serve
+
+   之后打开浏览器访问 http://localhost:8001 就可以了，默认用户名/密码都是 admin
+
+5. 打包上线
+   1. 进行front下运行 yarn build 进行打包
+   2. 将打包后的dist文件夹上传到服务器
+   3. 修改nginx配置文件，在其中添加
+   ```
+    location /admin/ {
+      proxy_pass http://127.0.0.1:8789/admin/;
+      proxy_set_header   X-Forwarded-Proto $scheme;
+      proxy_set_header   X-Real-IP         $remote_addr;
+    }
+    
+    location /wechat/ {
+      proxy_pass http://127.0.0.1:8789/wechat/;
+      proxy_set_header   X-Forwarded-Proto $scheme;
+      proxy_set_header   X-Real-IP         $remote_addr;
+    }
+    
+    location / {
+      try_files $uri $uri/ /index.html;
+    }
+   ```
+
+# 外部调用
+
+如果你需要的不只是小程序版本管理相关的功能，需要自己实现其他功能，可能需要用到
+component_access_token、component_appid、authorizer_appid、authorizer_access_token
+等参数，由于你在自己的项目中刷新token，可能会让wechat-mp的token失效，或者wechat-mp会让你项目的token失效
+所以留了一个开放接口，供其他项目获取相关token，具体调用方式如下
+
+```
+// 生成签名
+function generateSign($params, $secretKey): string
+{
+    // 将参数按照键名进行字典排序
+    ksort($params);
+    // 拼接参数和对应的值
+    $signStr = '';
+    foreach ($params as $key => $value) {
+        $signStr .= $key . '=' . $value . '&';
+    }
+    // 拼接密钥
+    $signStr .= 'key=' . $secretKey;
+    // 使用哈希函数计算签名，这里使用 MD5 作为示例
+    return strtoupper(md5($signStr));
+}
+
+$params = [
+    'platform_appid' => '', // 开放平台的appid
+    'appid' => '', // 小程序的appid
+    'time' => time(),
+];
+$secretKey = '';
+$params['sign'] = generateSign($params,$secretKey);
+$url = 'https://xxxxxx.com/openapi/getToken?' . http_build_query($params);
+$res = file_get_contents($url);
+//var_dump(json_decode($res,true));
+```
+
+如有不明白的可以留言，欢迎各位提pr
+
+如果对你的项目有帮助，欢迎star，谢谢
