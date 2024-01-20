@@ -9,6 +9,7 @@ use EasyWeChat\Kernel\Exceptions\InvalidArgumentException;
 use EasyWeChat\Kernel\Exceptions\InvalidConfigException;
 use EasyWeChat\Kernel\Exceptions\RuntimeException;
 use support\Request;
+use support\Response;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
@@ -19,7 +20,7 @@ class OpenApiController
     /**
      * 获取token给第三方平台使用
      * @param Request $request
-     * @return array
+     * @return array|Response
      * @throws BadRequestHttpException
      * @throws DataNotFoundException
      * @throws DbException
@@ -30,7 +31,7 @@ class OpenApiController
      * @throws RuntimeException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function getToken(Request $request): array
+    public function getToken(Request $request)
     {
         // 开放平台应用ID
         $platformAppId = $request->input('platform_appid');
