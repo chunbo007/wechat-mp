@@ -49,7 +49,7 @@ class OfficialAccountController extends BaseController
         if (empty($code)) {
             return '授权失败：无效的code';
         }
-        if (empty($state)) {
+        if (empty($component_appid)) {
             return '授权失败：无效的component_appid';
         }
 

@@ -113,3 +113,19 @@ CREATE TABLE `wxcallback_forward`
 
 INSERT INTO `wechat_mp`.`user` (`id`, `username`, `password`, `createtime`, `updatetime`)
 VALUES (1, 'admin', '21232f297a57a5a743894a0e4a801fc3', '2024-01-18 23:17:23', '2024-01-13 23:50:17');
+
+-- 试用小程序申请流水表
+CREATE TABLE `trial_records`
+(
+    `id`              int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `open_id`         varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL,
+    `unique_id`       varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '试用小程序临时id，每次生成链接都会生成一个',
+    `component_appid` varchar(30) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '第三方平台appid',
+    `appid`           varchar(30) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '小程序appid',
+    `create_time`     int(11)          NOT NULL,
+    `update_time`     int(11)          NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `unique_id` (`unique_id`) USING BTREE
+) ENGINE = MyISAM
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_unicode_ci COMMENT ='试用小程序申请流水表';
