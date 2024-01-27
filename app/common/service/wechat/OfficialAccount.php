@@ -16,11 +16,12 @@ class OfficialAccount
     /**
      * 获取网页授权链接
      * @param $redirect
+     * @param $state
      * @return string
      */
-    static function getOauthUrl($redirect): string
+    static function getOauthUrl($redirect, $state): string
     {
-        return self::getApp()->oauth->scopes(['snsapi_base'])->redirect($redirect);
+        return self::getApp()->oauth->scopes(['snsapi_base'])->withState($state)->redirect($redirect);
     }
 
     static function getApp(): Application
