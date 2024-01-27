@@ -27,7 +27,7 @@ class OfficialAccountController extends BaseController
      */
     public function oauth(Request $request): Response
     {
-        $redirect = $request->header('x-forwarded-proto') . '://' . $request->host() . route('wechat.oauthCallback');
+        $redirect = env('SITE_URL') . route('wechat.oauthCallback');
         $url = OfficialAccount::getOauthUrl($redirect);
         return redirect($url);
     }
