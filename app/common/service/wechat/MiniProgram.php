@@ -80,6 +80,19 @@ class MiniProgram extends OpenPlatform
     }
 
     /**
+     * 检测小程序名称是否可用
+     * @param $appid
+     * @param $nickname |名称（昵称）
+     * @return array|Collection|object|ResponseInterface|string
+     * @throws GuzzleException
+     * @throws InvalidConfigException
+     */
+    public function checkNickName($appid, $nickname)
+    {
+        return $this->getMiniProgram($appid)->setting->isAvailableNickname($nickname);
+    }
+
+    /**
      * 获取小程序码
      * @param $appid
      * @return array|Collection|object|ResponseInterface|string

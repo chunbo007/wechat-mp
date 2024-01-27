@@ -14,8 +14,16 @@
 
 use Webman\Route;
 
-// 发起微信授权
-Route::any('/wechat/authorizer/{url}', [app\wechat\controller\IndexController::class, 'authorizer'])->name('wechat.authorizer');
+Route::group('/wechat', function () {
+    // 公众号网页授权
+    Route::group('/officialAccount', function () {
+        Route::get('/oauth', [app\wechat\controller\OfficialAccountController::class, 'oauth']);
+        Route::get('/oauthCallback', [app\wechat\controller\OfficialAccountController::class, 'oauthCallback'])->name('wechat.oauthCallback');
+    });
+    // 发起小程序授权至开放平台
+    Route::any('/authorizer/{url}', [app\wechat\controller\IndexController::class, 'authorizer'])->name('wechat.authorizer');
+});
+
 // 微信授权事件、消息与事件通知回调
 Route::any('/wechat[/{appid}]', [app\wechat\controller\IndexController::class, 'index']);
 

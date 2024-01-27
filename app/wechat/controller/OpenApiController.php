@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 开放平台
+ */
 namespace app\wechat\controller;
 
 use app\admin\model\Platform;
@@ -15,7 +17,7 @@ use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
 use Tinywan\ExceptionHandler\Exception\BadRequestHttpException;
 
-class OpenApiController
+class OpenApiController extends BaseController
 {
     /**
      * 获取token给第三方平台使用

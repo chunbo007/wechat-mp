@@ -172,4 +172,15 @@ class OpenPlatform extends BaseServices {
             'mobile_url' => urlencode($mobile_url)
         ];
     }
+
+    /**
+     * 注册试用小程序
+     * @param $name
+     * @param $openid
+     * @return mixed
+     */
+    public function fastRegisterBetaApp($name, $openid)
+    {
+        return $this->app->httpPostJson('wxa/component/fastregisterbetaweapp', compact('name', 'openid'));
+    }
 }

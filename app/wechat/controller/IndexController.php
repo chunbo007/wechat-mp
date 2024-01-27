@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 小程序
+ */
 namespace app\wechat\controller;
 
 use app\admin\model\Platform;
@@ -9,7 +11,7 @@ use app\common\service\wechat\OpenPlatform;
 use support\Request;
 use Tinywan\ExceptionHandler\Exception\BadRequestHttpException;
 
-class IndexController
+class IndexController extends BaseController
 {
     /**
      * 处理微信平台消息入口
