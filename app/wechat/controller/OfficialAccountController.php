@@ -58,7 +58,6 @@ class OfficialAccountController extends BaseController
         } catch (GuzzleException|AuthorizeFailedException $e) {
             return '获取用户信息失败，' . $e->getMessage();
         }
-
         // 虚拟账号时不进行登录
         if (isset($userInfo['raw']['is_snapshotuser'])) {
             return '请关注公众号后再点击菜单进行操作';
@@ -70,16 +69,15 @@ class OfficialAccountController extends BaseController
         $openid = $userInfo->getId();
         $openPlatform = new OpenPlatform($component_appid);
         $fastRegister = $openPlatform->fastRegisterBetaApp($name, $openid);
-
-        if ($fastRegister['code'] == 0) {
+        if ($fastRegister['errcode'] == 0) {
             // 将openid和unique_id存到申请小程序流水表
             TrialRecords::create([
                 'open_id' => $openid,
-                'unique_id' => $fastRegister['data']['unique_id'],
+                'unique_id' => $fastRegister['unique_id'],
             ]);
-            return redirect($fastRegister['data']['authorize_url']);
+            return redirect($fastRegister['authorize_url']);
         } else {
-            return $fastRegister['msg'];
+            return $fastRegister['errmsg'];
         }
     }
 }
