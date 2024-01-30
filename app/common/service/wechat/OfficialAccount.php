@@ -43,4 +43,16 @@ class OfficialAccount
     {
         return self::getApp()->oauth->userFromCode($code);
     }
+
+    // 发送消息
+    static function sendMessage($openId, $message)
+    {
+        return self::getApp()->customer_service->message($message)->to($openId)->send();
+    }
+
+    // 上传临时图片素材
+    static function uploadTempImage($path)
+    {
+        return self::getApp()->media->uploadImage($path);
+    }
 }

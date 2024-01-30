@@ -64,3 +64,66 @@ function verifySign($params, $secretKey, $sign): bool
         return false;
     }
 }
+
+/**
+ * curl请求
+ * @param $url
+ * @param $data
+ * @param $headers
+ * @param $method
+ * @return bool|string
+ */
+function curlRequest($url, $data = array(), $headers = array(), $method = 'GET')
+{
+    $ch = curl_init();
+
+    // 设置请求 URL
+    curl_setopt($ch, CURLOPT_URL, $url);
+
+    // 设置请求方法
+    if ($method === 'POST') {
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+    }
+
+    // 设置请求头
+    if (!empty($headers)) {
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    }
+
+    // 设置其他选项
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HEADER, false);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+
+    // 发起请求并获取响应
+    $response = curl_exec($ch);
+
+    // 检查请求是否成功
+    if ($response === false) {
+        $error = curl_error($ch);
+        curl_close($ch);
+        return "Curl Error: " . $error;
+    } else {
+        curl_close($ch);
+        return $response;
+    }
+}
+
+/**
+ * 生成随机字符串
+ * @param $length
+ * @param bool $numeric
+ * @return string
+ */
+function generateRandomString($length, bool $numeric = false): string
+{
+    $characters = ($numeric ? '0123456789' : '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+    $result = '';
+    $max = strlen($characters) - 1;
+    for ($i = 0; $i < $length; $i++) {
+        $result .= $characters[mt_rand(0, $max)];
+    }
+    return $result;
+}
+

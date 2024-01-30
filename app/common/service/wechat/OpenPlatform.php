@@ -71,6 +71,13 @@ class OpenPlatform extends BaseServices {
                 if (isset($message['InfoType'])) {
                     // 授权事件 日志记录
                     $this->addComponentCallBackRecord($message);
+                    switch ($message['InfoType']) {
+                        case 'notify_third_fastregisterbetaapp':
+                            FastRegisterApp::callback($message);
+                            break;
+                        default:
+                            break;
+                    }
                 } else if (isset($message['MsgType'])) {
                     // 消息与事件通知 日志记录
                     $this->addWxcallbackBizRecord($message, $appid);
