@@ -132,7 +132,7 @@ class FastRegisterApp
     // 推送正在创建小程序提示信息
     static function pushWaitInfo($openId)
     {
-        $message = new Text('小二正在为您创建试用小程序，请稍等片刻...');
+        $message = new Text('试用小程序创建中，预计需要10秒，请稍候');
         OfficialAccount::sendMessage($openId, $message);
     }
 
