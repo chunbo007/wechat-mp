@@ -38,7 +38,7 @@ class FastRegisterApp
         // 获取体验码
         $mediaId = self::getExpQrCode($componentId, $appid);
         // 创建账号店铺、生成随机用户名、密码
-        $username = generateRandomString(6);
+        $username = generateRandomString(6, false, true);
         $password = generateRandomString(8, true);
         self::addStore($storeName, $username, $password);
         // 推送创建结果

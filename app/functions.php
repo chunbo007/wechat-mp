@@ -115,11 +115,16 @@ function curlRequest($url, $data = array(), $headers = array(), $method = 'GET')
  * 生成随机字符串
  * @param $length
  * @param bool $numeric
+ * @param bool $simple
  * @return string
  */
-function generateRandomString($length, bool $numeric = false): string
+function generateRandomString($length, bool $numeric = false, bool $simple = false): string
 {
-    $characters = ($numeric ? '0123456789' : '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+    if ($simple) {
+        $characters = 'ABCDEFGHKMNPQRSTUVWXYZ';
+    } else {
+        $characters = ($numeric ? '0123456789' : '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+    }
     $result = '';
     $max = strlen($characters) - 1;
     for ($i = 0; $i < $length; $i++) {
@@ -127,4 +132,5 @@ function generateRandomString($length, bool $numeric = false): string
     }
     return $result;
 }
+
 
