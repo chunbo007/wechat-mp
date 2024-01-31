@@ -19,6 +19,8 @@ class FastRegisterApp
         $componentId = $message['AppId'];
         // 小程序appid
         $appid = $message['appid'];
+        // 新增授权信息
+        self::addAuthorizerInfo($componentId, $appid);
         // unique_id
         $uniqueId = $message['info']['unique_id'];
         // 获取申请流水信息
@@ -41,6 +43,13 @@ class FastRegisterApp
         self::pushSuccessMsg($trialRecords['open_id'], $username, $password);
         // 推送体验码
         self::pushExpQrCode($trialRecords['open_id'], $mediaId);
+    }
+
+    // 新增授权信息
+    static function addAuthorizerInfo($componentId, $appid)
+    {
+        $openPlatform = new OpenPlatform($componentId);
+        $openPlatform->addAuthorizerInfo($appid);
     }
 
     // 保存创建结果

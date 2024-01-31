@@ -138,6 +138,34 @@ class OpenPlatform extends BaseServices {
         }
     }
 
+    public function addAuthorizerInfo($appid)
+    {
+        $program = $this->app->getAuthorizer($appid);
+        $program_authorizer_info = $program['authorizer_info'];
+        $program_authorization_info = $program['authorization_info'];
+        $insert_data = [
+            'platform_id' => 5,
+            'appid' => $program_authorization_info['authorizer_appid'] ?? '',
+            'refreshtoken' => $program_authorization_info['authorizer_refresh_token'] ?? '',
+            'auth_time' => time(),
+            'app_type' => isset($program_authorizer_info['MiniProgramInfo']),
+            'nick_name' => $program_authorizer_info['nick_name'] ?? '',
+            'user_name' => $program_authorizer_info['user_name'] ?? '',
+            'head_img' => $program_authorizer_info['head_img'] ?? '',
+            'qrcode_url' => $program_authorizer_info['qrcode_url'] ?? '',
+            'principal_name' => $program_authorizer_info['principal_name'] ?? '',
+            'register_type' => $program_authorizer_info['register_type'] ?? '',
+            'verify_info' => $program_authorizer_info['verify_type_info']['id'] ?? '',
+            'service_type' => $program_authorizer_info['service_type_info']['id'] ?? '',
+            'account_status' => $program_authorizer_info['account_status'] ?? '',
+            'is_phone' => $program_authorizer_info['basic_config']['is_phone_configured'] ?? '',
+            'is_email' => $program_authorizer_info['basic_config']['is_email_configured'] ?? '',
+            'func_info' => $program_authorization_info['func_info'] ? json_encode($program_authorization_info['func_info'], JSON_UNESCAPED_UNICODE) : '',
+            'json_data' => json_encode($program, true),
+        ];
+        Authorizers::create($insert_data);
+    }
+
     public function getTemplate()
     {
         return $this->app->code_template->list();
