@@ -25,6 +25,8 @@ class FastRegisterApp
         $uniqueId = $message['info']['unique_id'];
         // 获取申请流水信息
         $trialRecords = self::getTrialRecords($uniqueId);
+        // 推送正在创建小程序提示信息
+        self::pushWaitInfo($trialRecords['open_id']);
         // 小程序名称
         $storeName = "筋斗云{$trialRecords['store_id']}";
         // 保存创建结果
@@ -107,7 +109,7 @@ class FastRegisterApp
         Log::info('step2 commit result', $result);
     }
 
-    // 获取小程序体验码
+    // 获取小程序体验码并上传至素材库
     static function getExpQrCode($componentId, $appid)
     {
         $miniprogram = new MiniProgram($componentId);
@@ -127,6 +129,13 @@ class FastRegisterApp
         $yinghuo->addStore($storeName, $username, $password);
     }
 
+    // 推送正在创建小程序提示信息
+    static function pushWaitInfo($openId)
+    {
+        $message = new Text('小二正在为您创建试用小程序，请稍等片刻...');
+        OfficialAccount::sendMessage($openId, $message);
+    }
+
     // 推送小程序体验码
     static function pushSuccessMsg($openId, $username, $password)
     {
@@ -138,7 +147,7 @@ class FastRegisterApp
         OfficialAccount::sendMessage($openId, $message);
     }
 
-    // 获取小程序体验码并上传至素材库
+    // 推送小程序码
     static function pushExpQrCode($openId, $mediaId)
     {
         $message = new Image($mediaId);
