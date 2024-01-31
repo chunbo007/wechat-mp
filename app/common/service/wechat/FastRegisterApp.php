@@ -19,16 +19,18 @@ class FastRegisterApp
         $componentId = $message['AppId'];
         // 小程序appid
         $appid = $message['appid'];
-        // 小程序名称
-        $storeName = $message['info']['name'];
         // unique_id
         $uniqueId = $message['info']['unique_id'];
+        // 获取申请流水信息
+        $trialRecords = self::getTrialRecords($uniqueId);
+        // 小程序名称
+        $storeName = "筋斗云{$trialRecords['store_id']}";
         // 保存创建结果
         self::saveResult($uniqueId, $componentId, $appid);
         // 设置domain
         self::setDomain($componentId, $appid);
         // 提交体验版小程序
-        self::commit($componentId, $appid);
+        self::commit($componentId, $appid, $trialRecords['store_id']);
         // 获取体验码
         $mediaId = self::getExpQrCode($componentId, $appid);
         // 创建账号店铺、生成随机用户名、密码
@@ -36,9 +38,9 @@ class FastRegisterApp
         $password = generateRandomString(8, true);
         self::addStore($storeName, $username, $password);
         // 推送创建结果
-        self::pushSuccessMsg($uniqueId, $username, $password);
+        self::pushSuccessMsg($trialRecords['open_id'], $username, $password);
         // 推送体验码
-        self::pushExpQrCode($uniqueId, $mediaId);
+        self::pushExpQrCode($trialRecords['open_id'], $mediaId);
     }
 
     // 保存创建结果
@@ -48,6 +50,12 @@ class FastRegisterApp
             'component_appid' => $componentId,
             'appid' => $appid,
         ], ['unique_id' => $uniqueId]);
+    }
+
+    // 获取申请流水信息
+    static function getTrialRecords($uniqueId)
+    {
+        return TrialRecords::where('unique_id', $uniqueId)->find();
     }
 
     // 配置小程序服务器域名
@@ -76,13 +84,13 @@ class FastRegisterApp
     }
 
     // 提交体验版小程序
-    static function commit($componentId, $appid)
+    static function commit($componentId, $appid, $storeId, $templateId = 42, $userVersion = '1.0', $userDesc = '小程序初始化')
     {
         $data = '{
-          "template_id": 42,
-          "ext_json": "{\"extEnable\": true,\"extAppid\": \"wx04fd386bf35103ef\",\"directCommit\": false,\"ext\": {\"storeId\": 10002}\n}",
-          "user_version": "1.00",
-          "user_desc": "1.00"
+          "template_id": ' . $templateId . ',
+          "ext_json": "{\"extEnable\": true,\"extAppid\": \"' . $appid . '\",\"directCommit\": false,\"ext\": {\"storeId\": ' . $storeId . '}\n}",
+          "user_version": "' . $userVersion . '",
+          "user_desc": "' . $userDesc . '"
         }';
         $data = json_decode($data, true);
         $miniprogram = new MiniProgram($componentId);
@@ -111,9 +119,8 @@ class FastRegisterApp
     }
 
     // 推送小程序体验码
-    static function pushSuccessMsg($uniqueId, $username, $password)
+    static function pushSuccessMsg($openId, $username, $password)
     {
-        $openId = TrialRecords::where('unique_id', $uniqueId)->value('open_id');
         $text = "恭喜你开店成功！长按识别小程序码，进入你的体验小程序店铺！电脑端登录筋斗云官网，体验更多功能\n" .
             "登录地址：https://f.1zh888.com/store\n" .
             "账号：{$username}\n" .
@@ -123,9 +130,8 @@ class FastRegisterApp
     }
 
     // 获取小程序体验码并上传至素材库
-    static function pushExpQrCode($uniqueId, $mediaId)
+    static function pushExpQrCode($openId, $mediaId)
     {
-        $openId = TrialRecords::where('unique_id', $uniqueId)->value('open_id');
         $message = new Image($mediaId);
         OfficialAccount::sendMessage($openId, $message);
     }

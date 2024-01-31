@@ -122,6 +122,7 @@ CREATE TABLE `trial_records`
     `unique_id`       varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '试用小程序临时id，每次生成链接都会生成一个',
     `component_appid` varchar(30) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '第三方平台appid',
     `appid`           varchar(30) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '小程序appid',
+    `store_id` int(11) NOT NULL,
     `create_time`     int(11)          NOT NULL,
     `update_time`     int(11)          NOT NULL,
     PRIMARY KEY (`id`),
