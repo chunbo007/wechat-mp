@@ -64,8 +64,8 @@ class OfficialAccountController extends BaseController
         }
 
         // 获取创建试用小程序链接
-        $id = Db::connect('yinghuo')->table('yoshop_store')->value('max(store_id)') + 1;
-        $name = "筋斗云" . $id;
+        $storeId = Db::connect('yinghuo')->table('yoshop_store')->value('max(store_id)') + 1;
+        $name = "筋斗云" . $storeId;
         $openid = $userInfo->getId();
         $openPlatform = new OpenPlatform($component_appid);
         $fastRegister = $openPlatform->fastRegisterBetaApp($name, $openid);
@@ -74,6 +74,7 @@ class OfficialAccountController extends BaseController
             TrialRecords::create([
                 'open_id' => $openid,
                 'unique_id' => $fastRegister['unique_id'],
+                'store_id' => $storeId
             ]);
             return redirect($fastRegister['authorize_url']);
         } else {
