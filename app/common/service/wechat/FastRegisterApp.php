@@ -45,7 +45,7 @@ class FastRegisterApp
     static function saveResult($uniqueId, $componentId, $appid)
     {
         TrialRecords::update([
-            'component_id' => $componentId,
+            'component_appid' => $componentId,
             'appid' => $appid,
         ], ['unique_id' => $uniqueId]);
     }
@@ -90,13 +90,11 @@ class FastRegisterApp
         Log::info('step2 commit result', $result);
     }
 
-    // 创建店铺
-
+    // 获取小程序体验码
     static function getExpQrCode($componentId, $appid)
     {
-        // 获取小程序体验码
         $miniprogram = new MiniProgram($componentId);
-        $stream = $miniprogram->getQrCode($appid);
+        $stream = $miniprogram->getExpQrCode($appid);
         $path = public_path("upload" . DIRECTORY_SEPARATOR . "{$appid}.jpg");
         file_put_contents($path, $stream);
         // 上传至素材库
@@ -104,8 +102,7 @@ class FastRegisterApp
         return $uploadResult['media_id'];
     }
 
-    // 推送消息
-
+    // 创建店铺
     static function addStore($storeName, $username, $password)
     {
         $yinghuo = new Yinghuo();
@@ -114,7 +111,6 @@ class FastRegisterApp
     }
 
     // 推送小程序体验码
-
     static function pushSuccessMsg($uniqueId, $username, $password)
     {
         $openId = TrialRecords::where('unique_id', $uniqueId)->value('open_id');
@@ -127,7 +123,6 @@ class FastRegisterApp
     }
 
     // 获取小程序体验码并上传至素材库
-
     static function pushExpQrCode($uniqueId, $mediaId)
     {
         $openId = TrialRecords::where('unique_id', $uniqueId)->value('open_id');

@@ -2,6 +2,8 @@
 
 namespace app\common\service;
 
+use support\Log;
+
 class Yinghuo
 {
     private string $baseUrl = '/index.php?s=';
@@ -27,22 +29,6 @@ class Yinghuo
         return error($result['message'], $result['status'], [], true);
     }
 
-    private function curl($cmd, $data, $needLogin = true, $method = 'POST')
-    {
-        try {
-            $url = env('YINGHUO_SITE') . $this->baseUrl . $cmd;
-            $header = [];
-            if ($needLogin) {
-                $header = ["Access-Token:{$this->accessToken}"];
-            }
-            $result = curlRequest($url, $data, $header, $method);
-            return json_decode($result, true);
-        } catch (\Exception $e) {
-            return ['status' => -1, 'message' => '请求失败'];
-        }
-
-    }
-
     /**
      * 新增店铺
      * @param $storeName
@@ -63,5 +49,22 @@ class Yinghuo
             ]
         ];
         return $this->curl('/admin/store/add', $data);
+    }
+
+    private function curl($cmd, $data, $needLogin = true, $method = 'POST')
+    {
+        try {
+            $url = env('YINGHUO_SITE') . $this->baseUrl . $cmd;
+            $header = [];
+            if ($needLogin) {
+                $header = ["Access-Token:{$this->accessToken}"];
+            }
+            $result = curlRequest($url, $data, $header, $method);
+            Log::info('萤火接口响应:' . $result);
+            return json_decode($result, true);
+        } catch (\Exception $e) {
+            return ['status' => -1, 'message' => '请求失败'];
+        }
+
     }
 }

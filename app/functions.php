@@ -95,7 +95,8 @@ function curlRequest($url, $data = array(), $headers = array(), $method = 'GET')
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HEADER, false);
     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-
+    // 禁止验证证书
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     // 发起请求并获取响应
     $response = curl_exec($ch);
 
