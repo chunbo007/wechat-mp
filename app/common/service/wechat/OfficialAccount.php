@@ -21,7 +21,7 @@ class OfficialAccount
      */
     static function getOauthUrl($redirect, $state): string
     {
-        return self::getApp()->oauth->scopes(['snsapi_userinfo'])->withState($state)->redirect($redirect);
+        return self::getApp()->oauth->scopes(['snsapi_base'])->withState($state)->redirect($redirect);
     }
 
     static function getApp(): Application

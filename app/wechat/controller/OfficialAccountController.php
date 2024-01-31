@@ -66,7 +66,7 @@ class OfficialAccountController extends BaseController
         // 获取创建试用小程序链接
         $storeId = Db::connect('yinghuo')->table('yoshop_store')->value('max(store_id)') + 1;
         $name = "筋斗云" . $storeId;
-        $openid = $userInfo->getId();
+        $openid = $userInfo['token_response']['openid'];
         $openPlatform = new OpenPlatform($component_appid);
         $fastRegister = $openPlatform->fastRegisterBetaApp($name, $openid);
         if ($fastRegister['errcode'] == 0) {
