@@ -17,6 +17,7 @@ use Webman\Route;
 Route::group('/wechat', function () {
     // 公众号网页授权
     Route::group('/officialAccount', function () {
+        Route::get('/handle', [app\wechat\controller\OfficialAccountController::class, 'handle']);
         Route::get('/oauth', [app\wechat\controller\OfficialAccountController::class, 'oauth']);
         Route::get('/oauthCallback', [app\wechat\controller\OfficialAccountController::class, 'oauthCallback'])->name('wechat.oauthCallback');
     });

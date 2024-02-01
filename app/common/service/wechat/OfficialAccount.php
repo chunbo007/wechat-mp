@@ -31,7 +31,27 @@ class OfficialAccount
     {
         self::$app = Factory::officialAccount([
             'app_id' => env('OFFICIAL_APPID'),         // AppID
-            'secret' => env('OFFICIAL_SECRET'),     // AppSecret
+            'secret' => env('OFFICIAL_SECRET'),        // AppSecret
+            'token' => env('OFFICIAL_TOKEN'),        // Token
+            'aes_key' => env('OFFICIAL_AES_KEY'),      // EncodingAESKey，兼容与安全模式下请一定要填写！！！
+            'response_type' => 'array',
+            'log' => [
+                'default' => env('APP_DEBUG') ? 'dev' : 'prod', // 默认使用的 channel，生产环境可以改为下面的 prod
+                'channels' => [
+                    // 测试环境
+                    'dev' => [
+                        'driver' => 'single',
+                        'path' => runtime_path("logs/wechat-official-account" . date('Y-m-d') . ".log"),
+                        'level' => 'debug',
+                    ],
+                    // 生产环境
+                    'prod' => [
+                        'driver' => 'daily',
+                        'path' => runtime_path("logs/wechat-official-account" . date('Y-m-d') . ".log"),
+                        'level' => 'info',
+                    ],
+                ],
+            ],
         ]);
         return self::$app;
     }
