@@ -20,6 +20,12 @@ use Tinywan\ExceptionHandler\Exception\BadRequestHttpException;
 
 class OfficialAccountController extends BaseController
 {
+    public function handle(Request $request)
+    {
+        $officialAccount = new OfficialAccount();
+        return $officialAccount->handle($request);
+    }
+
     /**
      * 发起公众号网页授权登录
      * @param Request $request
