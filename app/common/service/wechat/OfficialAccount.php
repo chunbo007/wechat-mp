@@ -89,32 +89,26 @@ class OfficialAccount
             self::$app->server->push(function ($message) {
                 switch ($message['MsgType']) {
                     case 'event':
-                        return '收到事件消息';
+                        if ($message['Event'] == 'subscribe') {
+                            return '欢迎使用筋斗云开店，快速生成微信小程序，<a href="https://wechat.1zh888.com/wechat/officialAccount/oauth">点击立即体验</a>';
+                        }
                         break;
-                    case 'text':
-                        return '收到文字消息';
-                        break;
-                    case 'image':
-                        return '收到图片消息';
-                        break;
-                    case 'voice':
-                        return '收到语音消息';
-                        break;
-                    case 'video':
-                        return '收到视频消息';
-                        break;
-                    case 'location':
-                        return '收到坐标消息';
-                        break;
-                    case 'link':
-                        return '收到链接消息';
-                        break;
-                    case 'file':
-                        return '收到文件消息';
-                    // ... 其它消息
-                    default:
-                        return '收到其它消息';
-                        break;
+//                    case 'text':
+//                        break;
+//                    case 'image':
+//                        break;
+//                    case 'voice':
+//                        break;
+//                    case 'video':
+//                        break;
+//                    case 'location':
+//                        break;
+//                    case 'link':
+//                        break;
+//                    case 'file':
+//                    // ... 其它消息
+//                    default:
+//                    break;
                 }
                 // ...
             });
