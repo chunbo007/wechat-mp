@@ -45,6 +45,8 @@ class FastRegisterApp
         self::pushSuccessMsg($trialRecords['open_id'], $username, $password);
         // 推送体验码
         self::pushExpQrCode($trialRecords['open_id'], $mediaId);
+        // 推送管理员注册信息
+        self::pushAdminMsg($storeName);
     }
 
     // 新增授权信息
@@ -152,5 +154,11 @@ class FastRegisterApp
     {
         $message = new Image($mediaId);
         OfficialAccount::sendMessage($openId, $message);
+    }
+
+    // 推送管理员注册信息
+    static function pushAdminMsg($storeName)
+    {
+        OfficialAccount::sendNewRegisterTemplate($storeName);
     }
 }

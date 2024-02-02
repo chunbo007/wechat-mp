@@ -16,6 +16,48 @@ class OfficialAccount
 {
     static Application $app;
 
+    // 处理公众号消息
+    public function handle($request)
+    {
+        try {
+            self::getApp();
+            $symfony_request = new SymfonyRequest($request->get(), $request->post(), [], $request->cookie(), [], [], $request->rawBody());
+            $symfony_request->headers = new HeaderBag($request->header());
+            self::$app->rebind('request', $symfony_request);
+            self::$app->server->push(function ($message) {
+                switch ($message['MsgType']) {
+                    case 'event':
+                        if ($message['Event'] == 'subscribe') {
+                            return '欢迎使用筋斗云开店，快速生成微信小程序，<a href="https://wechat.1zh888.com/wechat/officialAccount/oauth">点击立即体验</a>';
+                        }
+                        break;
+//                    case 'text':
+//                        break;
+//                    case 'image':
+//                        break;
+//                    case 'voice':
+//                        break;
+//                    case 'video':
+//                        break;
+//                    case 'location':
+//                        break;
+//                    case 'link':
+//                        break;
+//                    case 'file':
+//                    // ... 其它消息
+//                    default:
+//                    break;
+                }
+                // ...
+            });
+            $response = self::$app->server->serve();
+            return $response->getContent();
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return $e->getMessage();
+        }
+    }
+
     /**
      * 获取网页授权链接
      * @param $redirect
@@ -79,44 +121,18 @@ class OfficialAccount
         return self::getApp()->media->uploadImage($path);
     }
 
-    public function handle($request)
+    // 发送注册成功消息
+    static function sendNewRegisterTemplate($storeName)
     {
-        try {
-            self::getApp();
-            $symfony_request = new SymfonyRequest($request->get(), $request->post(), [], $request->cookie(), [], [], $request->rawBody());
-            $symfony_request->headers = new HeaderBag($request->header());
-            self::$app->rebind('request', $symfony_request);
-            self::$app->server->push(function ($message) {
-                switch ($message['MsgType']) {
-                    case 'event':
-                        if ($message['Event'] == 'subscribe') {
-                            return '欢迎使用筋斗云开店，快速生成微信小程序，<a href="https://wechat.1zh888.com/wechat/officialAccount/oauth">点击立即体验</a>';
-                        }
-                        break;
-//                    case 'text':
-//                        break;
-//                    case 'image':
-//                        break;
-//                    case 'voice':
-//                        break;
-//                    case 'video':
-//                        break;
-//                    case 'location':
-//                        break;
-//                    case 'link':
-//                        break;
-//                    case 'file':
-//                    // ... 其它消息
-//                    default:
-//                    break;
-                }
-                // ...
-            });
-            $response = self::$app->server->serve();
-            return $response->getContent();
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-            return $e->getMessage();
-        }
+        self::getApp()->template_message->send([
+            'touser' => env('OFFICIAL_OPENID'),
+            'template_id' => 'X4syaX3uBTjwrWf1MyA3IwZlpYn1LLjvmXCpbSOWZUU',
+            'data' => [
+                'keyword1' => "{$storeName}",
+                'keyword2' => "admin",
+                'keyword3' => date('Y-m-d H:i:s', time()),
+            ],
+        ]);
     }
+
 }
