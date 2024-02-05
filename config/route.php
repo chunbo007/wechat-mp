@@ -31,6 +31,7 @@ Route::any('/wechat[/{appid}]', [app\wechat\controller\IndexController::class, '
 // openapi
 Route::group('/openapi', function () {
     Route::get('/getToken', [app\wechat\controller\OpenApiController::class, 'getToken']);
+    Route::get('/getTokenByStoreId', [app\wechat\controller\OpenApiController::class, 'getTokenByStoreId']);
 })->middleware(
     app\wechat\middleware\OpenApiMiddleware::class
 );
