@@ -40,7 +40,7 @@ class FastRegisterApp
         // 创建账号店铺、生成随机用户名、密码
         $username = generateRandomString(6, false, true);
         $password = generateRandomString(8, true);
-        self::addStore($storeName, $username, $password);
+        self::addStore($trialRecords['store_id'], $storeName, $username, $password);
         // 推送创建结果
         self::pushSuccessMsg($trialRecords['open_id'], $username, $password);
         // 推送体验码
@@ -124,11 +124,21 @@ class FastRegisterApp
     }
 
     // 创建店铺
-    static function addStore($storeName, $username, $password)
+    static function addStore($storeId, $storeName, $username, $password)
     {
         $yinghuo = new Yinghuo();
+        // 登录运维平台
         $yinghuo->adminLogin(env('YINGHUO_USERNAME'), env('YINGHUO_PASSWORD'));
+        // 添加商店
         $yinghuo->addStore($storeName, $username, $password);
+        // 设置功能模块
+        $yinghuo->setModule($storeId);
+        // 登录商城
+        $yinghuo->superLogin($storeId);
+        // 设置商城默认上传文件设置
+        $yinghuo->settingUpload();
+        // 设置商城默认注册设置
+        $yinghuo->settingRegister();
     }
 
     // 推送正在创建小程序提示信息
