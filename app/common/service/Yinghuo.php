@@ -151,30 +151,28 @@ class Yinghuo
     public function settingUpload()
     {
         $data = [
-            [
-                "key" => "storage",
-                "form" => [
-                    "default" => "qiniu",
-                    "engine" => [
-                        "qiniu" => [
-                            "bucket" => env('QINIU_BUCKET'),
-                            "access_key" => env('QINIU_ACCESS_KEY'),
-                            "secret_key" => env('QINIU_SECRET_KEY'),
-                            "domain" => env('QINIU_DOMAIN')
-                        ],
-                        "aliyun" => [
-                            "bucket" => "",
-                            "access_key_id" => "",
-                            "access_key_secret" => "",
-                            "domain" => "http://"
-                        ],
-                        "qcloud" => [
-                            "bucket" => "",
-                            "region" => "",
-                            "secret_id" => "",
-                            "secret_key" => "",
-                            "domain" => "http://"
-                        ]
+            "key" => "storage",
+            "form" => [
+                "default" => "qiniu",
+                "engine" => [
+                    "qiniu" => [
+                        "bucket" => env('QINIU_BUCKET'),
+                        "access_key" => env('QINIU_ACCESS_KEY'),
+                        "secret_key" => env('QINIU_SECRET_KEY'),
+                        "domain" => env('QINIU_DOMAIN')
+                    ],
+                    "aliyun" => [
+                        "bucket" => "",
+                        "access_key_id" => "",
+                        "access_key_secret" => "",
+                        "domain" => "http://"
+                    ],
+                    "qcloud" => [
+                        "bucket" => "",
+                        "region" => "",
+                        "secret_id" => "",
+                        "secret_key" => "",
+                        "domain" => "http://"
                     ]
                 ]
             ]
