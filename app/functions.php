@@ -73,30 +73,31 @@ function verifySign($params, $secretKey, $sign): bool
  * @param $method
  * @return bool|string
  */
-function curlRequest($url, $data = array(), $headers = array(), $method = 'GET')
+function curlRequest($url, $data = [], $headers = [], $method = 'GET')
 {
     $ch = curl_init();
 
     // 设置请求 URL
     curl_setopt($ch, CURLOPT_URL, $url);
 
-    // 设置请求方法
+    // 设置请求方法和数据
     if ($method === 'POST') {
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
     }
 
     // 设置请求头
-    if (!empty($headers)) {
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    }
+    $headers[] = 'Content-Type: application/json';
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
     // 设置其他选项
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HEADER, false);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-    // 禁止验证证书
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HEADER => false,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_SSL_VERIFYPEER => false
+    ]);
+
     // 发起请求并获取响应
     $response = curl_exec($ch);
 
@@ -105,10 +106,10 @@ function curlRequest($url, $data = array(), $headers = array(), $method = 'GET')
         $error = curl_error($ch);
         curl_close($ch);
         return "Curl Error: " . $error;
-    } else {
-        curl_close($ch);
-        return $response;
     }
+
+    curl_close($ch);
+    return $response;
 }
 
 /**

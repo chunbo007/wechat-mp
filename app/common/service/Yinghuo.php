@@ -109,7 +109,7 @@ class Yinghuo
                 ]
             ]
         ];
-        return $this->curl('/store.module/edit', json_encode($data));
+        return $this->curl('/admin/store.module/edit', $data);
     }
 
     /**
@@ -124,6 +124,24 @@ class Yinghuo
             return success($result['data'], 0, '登录成功', true);
         }
         return error($result['message'], $result['status'], [], true);
+    }
+
+    /**
+     * 商城设置默认secret
+     * @param $appid
+     * @return array|mixed
+     */
+    public function settingWxAppInfo($appid)
+    {
+        $data = [
+            "key" => "basic",
+            "form" => [
+                "enabled" => true,
+                "app_id" => $appid,
+                "app_secret" => "fastRegisterApp"
+            ]
+        ];
+        return $this->curl('/store/client.wxapp.setting/update', $data, 'store');
     }
 
     /**
@@ -161,7 +179,7 @@ class Yinghuo
                 ]
             ]
         ];
-        return $this->curl('/store/setting/update', json_encode($data), 'store');
+        return $this->curl('/store/setting/update', $data, 'store');
     }
 
     /**
@@ -185,7 +203,7 @@ class Yinghuo
                 "isPersonalMpweixin" => 1
             ]
         ];
-        return $this->curl('/store/setting/update', json_encode($data), 'store');
+        return $this->curl('/store/setting/update', $data, 'store');
     }
 
     private function curl($cmd, $data, $type = "admin", $needLogin = true, $method = 'POST')
