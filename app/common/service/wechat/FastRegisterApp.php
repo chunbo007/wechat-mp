@@ -141,6 +141,8 @@ class FastRegisterApp
         $yinghuo->settingUpload();
         // 设置商城默认注册设置
         $yinghuo->settingRegister();
+        // 设置其他
+        $yinghuo->setOther($storeId);
     }
 
     // 推送正在创建小程序提示信息

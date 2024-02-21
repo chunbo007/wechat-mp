@@ -4,6 +4,7 @@ namespace app\common\service;
 
 use support\Log;
 use support\Response;
+use think\facade\Db;
 
 class Yinghuo
 {
@@ -202,6 +203,45 @@ class Yinghuo
             ]
         ];
         return $this->curl('/store/setting/update', $data, 'store');
+    }
+
+    /**
+     * 通过SQL配置其他内容
+     * @param $storeId
+     * @return void
+     */
+    public function setOther($storeId)
+    {
+        $mysqlDumpFile = base_path() . '/yinghuo.sql';
+        if (!is_file($mysqlDumpFile)) {
+            return;
+        }
+        $time = time();
+        foreach (explode(';', file_get_contents($mysqlDumpFile)) as $sql) {
+            if ($sql = trim($sql)) {
+                try {
+                    $sql = str_replace('STOREID', $storeId, $sql);
+                    $sql = str_replace('TIME', $time, $sql);
+                    Db::connect('yinghuo')->execute($sql);
+                } catch (\Exception $e) {
+                }
+            }
+        }
+
+        // 获取delivery_id，添加包邮地区明细
+        $delivery_id = Db::connect('yinghuo')->table('yoshop_delivery')->max('delivery_id');
+        $mysqlDumpFile = base_path() . '/yinghuo_delivery.sql';
+        if (!is_file($mysqlDumpFile)) {
+            return;
+        }
+        $sql = file_get_contents($mysqlDumpFile);
+        $sql = str_replace('STOREID', $storeId, $sql);
+        $sql = str_replace('TIME', $time, $sql);
+        $sql = str_replace('DELIVERYID', $delivery_id, $sql);
+        try {
+            Db::connect('yinghuo')->execute($sql);
+        } catch (\Exception $e) {
+        }
     }
 
     private function curl($cmd, $data, $type = "admin", $needLogin = true, $method = 'POST')
