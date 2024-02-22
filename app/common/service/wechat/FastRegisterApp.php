@@ -97,8 +97,11 @@ class FastRegisterApp
     }
 
     // 提交体验版小程序
-    static function commit($componentId, $appid, $storeId, $templateId = 42, $userVersion = '1.0', $userDesc = '小程序初始化')
+    static function commit($componentId, $appid, $storeId)
     {
+        $templateId = env('APP_TEMPLATE_ID');
+        $userVersion = env('APP_VERSION');
+        $userDesc = env('APP_DESC');
         $data = '{
           "template_id": ' . $templateId . ',
           "ext_json": "{\"extEnable\": true,\"extAppid\": \"' . $appid . '\",\"directCommit\": false,\"ext\": {\"storeId\": ' . $storeId . '}\n}",
