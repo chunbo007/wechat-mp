@@ -26,7 +26,7 @@ class FastRegisterApp
         // 获取申请流水信息
         $trialRecords = self::getTrialRecords($uniqueId);
         // 推送正在创建小程序提示信息
-        self::pushWaitInfo($trialRecords['open_id']);
+        self::pushWaitInfo($trialRecords['open_id'], $uniqueId);
         // 小程序名称
         $storeName = "筋斗云{$trialRecords['store_id']}";
         // 保存创建结果
@@ -42,9 +42,9 @@ class FastRegisterApp
         $password = generateRandomString(8, true);
         self::addStore($trialRecords['store_id'], $appid, $storeName, $username, $password);
         // 推送创建结果
-        self::pushSuccessMsg($trialRecords['open_id'], $username, $password);
+        self::pushSuccessMsg($trialRecords['open_id'], $username, $password, $uniqueId);
         // 推送体验码
-        self::pushExpQrCode($trialRecords['open_id'], $mediaId);
+        self::pushExpQrCode($trialRecords['open_id'], $mediaId, $uniqueId);
         // 推送管理员注册信息
         self::pushAdminMsg($storeName);
     }
@@ -123,6 +123,7 @@ class FastRegisterApp
         file_put_contents($path, $stream);
         // 上传至素材库
         $uploadResult = OfficialAccount::uploadTempImage($path);
+        Log::info('step3 get qrcode result', $uploadResult);
         return $uploadResult['media_id'];
     }
 
@@ -149,33 +150,44 @@ class FastRegisterApp
     }
 
     // 推送正在创建小程序提示信息
-    static function pushWaitInfo($openId)
+    static function pushWaitInfo($openId, $uniqueId)
     {
         $message = new Text('试用小程序创建中，预计需要10秒，请稍候');
-        OfficialAccount::sendMessage($openId, $message);
+        $res = OfficialAccount::sendMessage($openId, $message);
+        self::saveMessageResult($res, 'send_result1', $uniqueId);
     }
 
-    // 推送小程序体验码
-    static function pushSuccessMsg($openId, $username, $password)
+    // 推送小程序账号和密码
+    static function pushSuccessMsg($openId, $username, $password, $uniqueId)
     {
         $text = "恭喜你开店成功！长按识别小程序码，进入你的体验小程序店铺！电脑端登录筋斗云官网，体验更多功能\n" .
             "登录地址：https://f.1zh888.com/store\n" .
             "账号：{$username}\n" .
             "密码：{$password}";
         $message = new Text($text);
-        OfficialAccount::sendMessage($openId, $message);
+        $res = OfficialAccount::sendMessage($openId, $message);
+        self::saveMessageResult($res, 'send_result2', $uniqueId);
     }
 
     // 推送小程序码
-    static function pushExpQrCode($openId, $mediaId)
+    static function pushExpQrCode($openId, $mediaId, $uniqueId)
     {
         $message = new Image($mediaId);
-        OfficialAccount::sendMessage($openId, $message);
+        $res = OfficialAccount::sendMessage($openId, $message);
+        self::saveMessageResult($res, 'send_result3', $uniqueId);
     }
 
     // 推送管理员注册信息
     static function pushAdminMsg($storeName)
     {
         OfficialAccount::sendNewRegisterTemplate($storeName);
+    }
+
+    // 保存消息推送结果
+    static function saveMessageResult($message, $field, $uniqueId)
+    {
+        TrialRecords::update([
+            $field => $message,
+        ], ['unique_id' => $uniqueId]);
     }
 }
