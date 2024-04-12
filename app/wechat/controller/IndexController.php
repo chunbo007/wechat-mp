@@ -8,6 +8,8 @@ use app\admin\model\Platform;
 use app\common\model\Authorizers;
 use app\common\service\Forward;
 use app\common\service\wechat\OpenPlatform;
+use support\Cache;
+use support\Log;
 use support\Request;
 use Tinywan\ExceptionHandler\Exception\BadRequestHttpException;
 
@@ -23,7 +25,14 @@ class IndexController extends BaseController
             $xml = $request->rawBody();
             $xml = simplexml_load_string($xml);
             if (empty($xml)) return '请求体为空';
-
+            // 过滤掉重复请求
+            $key = 'wechat_mp_' . $xml->AppId;
+            if (Cache::has($key)) {
+                Log::info('收到重复请求，已过滤', [(string)$xml->AppId]);
+                return '请求重复';
+            } else {
+                Cache::set($key, (string)$xml->AppId, 3200);
+            }
             if ($appid) {
                 // 转发消息与事件推送请求给第三方
                 $forwardResult = Forward::run($request, $appid, 'app');
