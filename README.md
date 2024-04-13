@@ -64,20 +64,20 @@
    2. 将打包后的dist文件夹上传到服务器
    3. 修改nginx配置文件，在其中添加
    ```
-    location /admin/ {
-      proxy_pass http://127.0.0.1:8789/admin/;
+    location /admin {
+      proxy_pass http://127.0.0.1:8789/admin;
       proxy_set_header   X-Forwarded-Proto $scheme;
       proxy_set_header   X-Real-IP         $remote_addr;
     }
     
-    location /wechat/ {
-      proxy_pass http://127.0.0.1:8789/wechat/;
+    location /wechat {
+      proxy_pass http://127.0.0.1:8789/wechat;
       proxy_set_header   X-Forwarded-Proto $scheme;
       proxy_set_header   X-Real-IP         $remote_addr;
     }
 
-    location /openapi/ {
-      proxy_pass http://127.0.0.1:8789/openapi/;
+    location /openapi {
+      proxy_pass http://127.0.0.1:8789/openapi;
       proxy_set_header   X-Forwarded-Proto $scheme;
       proxy_set_header   X-Real-IP         $remote_addr;
     }
