@@ -23,16 +23,16 @@ class IndexController extends BaseController
     {
         try {
             $xml = $request->rawBody();
-            $xml = simplexml_load_string($xml);
-            if (empty($xml)) return '请求体为空';
             // 过滤掉重复请求
-            $key = 'wechat_mp_' . $xml->AppId;
+            $key = 'wechat_mp_' . md5(json_encode($xml));
             if (Cache::has($key)) {
-                Log::info('收到重复请求，已过滤', [(string)$xml->AppId]);
+                Log::info('收到重复请求，已过滤');
                 return '请求重复';
             } else {
-                Cache::set($key, (string)$xml->AppId, 3200);
+                Cache::set($key, '', 3);
             }
+            $xml = simplexml_load_string($xml);
+            if (empty($xml)) return '请求体为空';
             if ($appid) {
                 // 转发消息与事件推送请求给第三方
                 $forwardResult = Forward::run($request, $appid, 'app');
