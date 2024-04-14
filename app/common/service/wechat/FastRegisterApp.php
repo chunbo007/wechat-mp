@@ -26,7 +26,9 @@ class FastRegisterApp
         // 获取申请流水信息
         $trialRecords = self::getTrialRecords($uniqueId);
         // 推送正在创建小程序提示信息
-        self::pushWaitInfo($trialRecords['open_id'], $uniqueId);
+//        self::pushWaitInfo($trialRecords['open_id'], $uniqueId);
+        self::pushWaitInfo(env('OFFICIAL_OPENID'), $uniqueId);
+        die;
         // 小程序名称
         $storeName = "筋斗云{$trialRecords['store_id']}";
         // 保存创建结果
@@ -187,7 +189,7 @@ class FastRegisterApp
     static function saveMessageResult($message, $field, $uniqueId)
     {
         TrialRecords::update([
-            $field => $message,
+            $field => json_encode($message),
         ], ['unique_id' => $uniqueId]);
     }
 }
