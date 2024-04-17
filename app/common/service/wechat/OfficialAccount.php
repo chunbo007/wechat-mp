@@ -4,6 +4,7 @@ namespace app\common\service\wechat;
 
 
 use EasyWeChat\Factory;
+use EasyWeChat\Kernel\Messages\Transfer;
 use EasyWeChat\OfficialAccount\Application;
 use GuzzleHttp\Exception\GuzzleException;
 use Overtrue\Socialite\Exceptions\AuthorizeFailedException;
@@ -29,24 +30,23 @@ class OfficialAccount
                     case 'event':
                         if ($message['Event'] == 'subscribe') {
                             return '欢迎使用筋斗云开店，快速生成微信小程序，<a href="https://wechat.1zh888.com/wechat/officialAccount/oauth">点击立即体验</a>';
+                        } elseif ($message['Event'] == 'CONTACT') {
+                            return '手机：13163327007 \n微信同号';
                         }
                         break;
-//                    case 'text':
-//                        break;
-//                    case 'image':
-//                        break;
-//                    case 'voice':
-//                        break;
-//                    case 'video':
-//                        break;
+                    case 'text':
+                    case 'image':
+                    case 'voice':
+                    case 'video':
+                        return new Transfer();
 //                    case 'location':
 //                        break;
 //                    case 'link':
 //                        break;
 //                    case 'file':
 //                    // ... 其它消息
-//                    default:
-//                    break;
+                    default:
+                        break;
                 }
                 // ...
             });
