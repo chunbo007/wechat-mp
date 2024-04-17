@@ -30,8 +30,6 @@ class OfficialAccount
                     case 'event':
                         if ($message['Event'] == 'subscribe') {
                             return '欢迎使用筋斗云开店，快速生成微信小程序，<a href="https://wechat.1zh888.com/wechat/officialAccount/oauth">点击立即体验</a>';
-                        } elseif ($message['Event'] == 'CONTACT') {
-                            return '手机：13163327007 \n微信同号';
                         }
                         break;
                     case 'text':
