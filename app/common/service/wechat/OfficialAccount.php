@@ -29,7 +29,7 @@ class OfficialAccount
                 switch ($message['MsgType']) {
                     case 'event':
                         if ($message['Event'] == 'subscribe') {
-                            return '欢迎使用筋斗云开店，快速生成微信小程序，<a href="https://wechat.1zh888.com/wechat/officialAccount/oauth">点击立即体验</a>';
+                            return '欢迎使用筋斗云开店，快速生成微信小程序，点击下方菜单立即体验吧！';
                         }
                         break;
                     case 'text':
