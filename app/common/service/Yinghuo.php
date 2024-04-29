@@ -88,6 +88,7 @@ class Yinghuo
                     "market-coupon",
                     "market-recharge",
                     "market-points",
+                    "market-promote",
                     "market-recommended",
                     "market-fullFree",
                     "statistics",
