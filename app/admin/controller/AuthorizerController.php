@@ -65,7 +65,7 @@ class AuthorizerController extends BaseController
     {
         $data = $request->post();
         $row = Authorizers::where('appid', $data['appid'])->find();
-        return success($row['refreshtoken']);
+        return success(['refreshtoken' => $row['refreshtoken']]);
     }
 
     public function originalMessage(Request $request)
