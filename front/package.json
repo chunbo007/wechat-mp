@@ -9,7 +9,7 @@
     "lint": "vue-cli-service lint",
     "build:preview": "vue-cli-service build --no-module --mode preview",
     "lint:nofix": "vue-cli-service lint --no-fix",
-    "lint:css": "stylelint src/**/*.*ss --fix  --custom-syntax postcss-less",
+    "lint:css": "stylelint src/**/*.*ss --fix  --custom-syntax postcss-less"
   },
   "dependencies": {
     "@ant-design-vue/pro-layout": "^1.0.12",
