@@ -15,6 +15,11 @@
 6. 发布小程序
 7. ...
 
+# 开源支持
+1. 后端 webman https://github.com/walkor/webman
+2. 前端 ant-design-vue-pro https://github.com/vueComponent/ant-design-vue-pro
+
+
 # 界面演示
 ![授权管理](https://github.com/chunbo007/wechat-mp/assets/16535982/14700ac3-fea0-475e-a1e6-f3a6ebbec556)
 ![版本管理](https://github.com/chunbo007/wechat-mp/assets/16535982/2dbe277d-77ab-4295-9755-9b39dcf3a9ca)
