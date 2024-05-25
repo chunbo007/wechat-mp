@@ -18,6 +18,7 @@
 # 开源支持
 1. 后端 webman https://github.com/walkor/webman
 2. 前端 ant-design-vue-pro https://github.com/vueComponent/ant-design-vue-pro
+3. easywechat https://github.com/w7corp/easywechat
 
 
 # 界面演示
