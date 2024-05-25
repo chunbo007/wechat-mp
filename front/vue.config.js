@@ -130,11 +130,22 @@ const vueConfig = {
         target: 'http://localhost:8789',
         ws: false,
         changeOrigin: true
+      },
+      '/wechat': {
+        target: 'http://localhost:8789',
+        ws: false,
+        changeOrigin: true
+      },
+      '/openapi': {
+        target: 'http://localhost:8789',
+        ws: false,
+        changeOrigin: true
       }
     },
     client: {
       overlay: false
-    }
+    },
+    allowedHosts: 'all'
   },
 
   // disable source map in production
