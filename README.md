@@ -1,6 +1,5 @@
 # wechat-mp 项目简介
 微信开放平台管理工具
-
 微信开放平台服务商一般有多套小程序需要管理，帮人代开发时需要客户不停扫码授权，体验极其不好。对于SAAS小程序服务商也可以在运维平台中尝试二开对接开放平台的api，但是项目多了以后每个运营平台都需要重复造轮子，而且维护成本也高，所以萌生了写一个通用管理微信开放平台的工具。
 
 微信官方其实有提供“第三方平台云服务”，但需要付费使用或者下载他们的源码本地部署，可惜官方只提供了GO语言的版本，所以只能自己写一个了。
@@ -16,12 +15,13 @@
 7. ...
 
 # 开源支持
-1. 后端 [webman](https://www.workerman.net/doc/webman)
-2. 前端 [ant-design-vue-pro](https://pro.antdv.com/docs/getting-started)
-3. SDK [EasyWechat](https://easywechat.com/)
+1. 后端 <a href="https://www.workerman.net/doc/webman" target="_blank">webman</a>
+2. 前端 <a href="https://pro.antdv.com/docs/getting-started" target="_blank">ant-design-vue-pro</a>
+3. SDK <a href="https://easywechat.com" target="_blank">EasyWechat</a>
+
 
 # 本地搭建视频教程
-[wechat-mp 微信开放平台小程序管理工具本地部署教程](https://www.bilibili.com/video/BV1M7421f7Ff)
+<a href="https://www.bilibili.com/video/BV1M7421f7Ff" target="_blank">wechat-mp 微信开放平台小程序管理工具本地部署教程</a>
 
 # 界面演示
 ![授权管理](https://github.com/chunbo007/wechat-mp/assets/16535982/14700ac3-fea0-475e-a1e6-f3a6ebbec556)
