@@ -20,6 +20,8 @@
 2. 前端 [ant-design-vue-pro](https://pro.antdv.com/docs/getting-started)
 3. SDK [EasyWechat](https://easywechat.com/)
 
+# 本地搭建视频教程
+[wechat-mp 微信开放平台小程序管理工具本地部署教程](https://www.bilibili.com/video/BV1M7421f7Ff)
 
 # 界面演示
 ![授权管理](https://github.com/chunbo007/wechat-mp/assets/16535982/14700ac3-fea0-475e-a1e6-f3a6ebbec556)
