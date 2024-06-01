@@ -51,7 +51,7 @@
           <a-input v-decorator="['third_secret']"/>
         </a-form-item>
         <a-form-item label="设为默认">
-          <a-switch v-decorator="['is_default', { valuePropName: 'checked' }]"/>
+          <a-switch v-decorator="['is_default', { valuePropName: 'checked', initialValue: true}]"/>
         </a-form-item>
       </a-form>
     </a-spin>
