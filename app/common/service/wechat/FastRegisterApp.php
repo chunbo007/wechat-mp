@@ -19,6 +19,8 @@ class FastRegisterApp
         $componentId = $message['AppId'];
         // 小程序appid
         $appid = $message['appid'];
+        // 微信接口有延迟，可能会认为当前小程序未授权给开放平台，所以需要等待2秒
+        sleep(2);
         // 新增授权信息
         self::addAuthorizerInfo($componentId, $appid);
         // unique_id
