@@ -131,6 +131,24 @@ $res = file_get_contents($url);
 //var_dump(json_decode($res,true));
 ```
 
+# 疑难解答
+## curl: (60) SSL certificate problem: unable to get local issuer certificate
+这是 SSL 证书问题所致，在使用 SDK 调用微信支付等相关的操作时可能会遇到报 “SSL certificate problem: unable to get local issuer certificate” 的错误。
+
+微信公众平台提供的文档中建议对部分较敏感的操作接口使用 https 协议进行访问，例如微信支付和红包等接口中涉及到操作商户资金的一些操作。 wechat SDK 遵循了官方建议，所以在调用这些接口时，除了按照官方文档设置操作证书文件外，还需要保证服务器正确安装了 CA 证书。
+
+下载 CA 证书
+你可以从 http://curl.haxx.se/ca/cacert.pem 下载 或者 使用微信官方提供的证书中的 CA 证书 rootca.pem 也是同样的效果。
+
+在 php.ini 中配置 CA 证书
+只需要将上面下载好的 CA 证书放置到您的服务器上某个位置，然后修改 php.ini 的 curl.cainfo 为该路径（绝对路径！），重启 php-fpm 服务即可。
+
+ini
+curl.cainfo = /path/to/downloaded/cacert.pem
+注意证书文件路径为绝对路径！以自己实际情况为准。
+
+其它修改 HTTP 类源文件的方式是不允许的。
+
 如有不明白的可以留言，欢迎各位提pr
 
 如果对你的项目有帮助，欢迎star，谢谢
