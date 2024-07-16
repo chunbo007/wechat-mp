@@ -34,7 +34,7 @@ class Platform extends PlatformModel
     public static function add($data)
     {
         try {
-            if ($data['is_default']) {
+            if (isset($data['is_default']) && $data['is_default'] == 1) {
                 self::where('is_default', 1)->update(['is_default' => 0]);
             }
             self::create($data);

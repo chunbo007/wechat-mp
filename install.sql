@@ -112,4 +112,4 @@ CREATE TABLE `wxcallback_forward`
   DEFAULT CHARSET = utf8 COMMENT ='请求转发日志';
 
 INSERT INTO `user` (`id`, `username`, `password`, `create_time`, `update_time`)
-VALUES (1, 'admin', '21232f297a57a5a743894a0e4a801fc3', '2024-01-18 23:17:23', '2024-01-13 23:50:17');
+VALUES (1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 1717411365, 1717411365);
