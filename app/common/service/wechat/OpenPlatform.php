@@ -75,6 +75,10 @@ class OpenPlatform extends BaseServices {
                         case 'notify_third_fastregisterbetaapp':
                             FastRegisterApp::callback($message);
                             break;
+                        case 'authorized':
+                        case 'updateauthorized':
+                            $this->addAuthorizerInfo($message);
+                            break;
                         default:
                             break;
                     }
@@ -138,11 +142,21 @@ class OpenPlatform extends BaseServices {
         }
     }
 
-    public function addAuthorizerInfo($appid)
+    /**
+     * 保存注册试用小程序结果
+     * */
+    public function addAuthorizerInfo($data)
     {
-        $program = $this->app->getAuthorizer($appid);
+        $program = $this->app->getAuthorizer($data['AuthorizerAppid']);
         $program_authorizer_info = $program['authorizer_info'];
         $program_authorization_info = $program['authorization_info'];
+        // 有时候平台不返回refresh_token，需要根据code手动去获取refresh_token
+        // 刷新令牌authorizer_refresh_token是需要一直保存的？有有效期这个说法吗？
+        // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/troubleshooting/TroubleShooting.html
+        if (!$program_authorization_info['authorizer_refresh_token']){
+            $program_authorization_info = $this->app->handleAuthorize($data['AuthorizationCode']);
+            $program_authorization_info = $program_authorization_info['authorization_info'];
+        }
         $insert_data = [
             'platform_id' => 5,
             'appid' => $program_authorization_info['authorizer_appid'] ?? '',
@@ -199,7 +213,7 @@ class OpenPlatform extends BaseServices {
     public function getPcAuthorizerUrl()
     {
         $pre_code = $this->app->createPreAuthorizationCode();
-        $callback = env('SITE_URL') . '/wechat/callback';
+        $callback = env('SITE_URL') . '/auth/callback';
         $pc_url = $this->app->getPreAuthorizationUrl($callback, $pre_code);
         $mobile_url = $this->app->getMobilePreAuthorizationUrl($callback, $pre_code);
         return [
