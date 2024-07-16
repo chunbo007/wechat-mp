@@ -143,7 +143,7 @@ class OpenPlatform extends BaseServices {
     }
 
     /**
-     * 保存注册试用小程序结果
+     * 保存小程序信息
      * */
     public function addAuthorizerInfo($data)
     {
@@ -177,7 +177,12 @@ class OpenPlatform extends BaseServices {
             'func_info' => $program_authorization_info['func_info'] ? json_encode($program_authorization_info['func_info'], JSON_UNESCAPED_UNICODE) : '',
             'json_data' => json_encode($program, true),
         ];
-        Authorizers::create($insert_data);
+        $row = Authorizers::find(['appid' => $insert_data['appid']]);
+        if ($row){
+            Authorizers::update($insert_data, ['appid' => $insert_data['appid']]);
+        }else{
+            Authorizers::create($insert_data);
+        }
     }
 
     public function getTemplate()
