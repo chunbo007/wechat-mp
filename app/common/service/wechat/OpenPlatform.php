@@ -112,7 +112,7 @@ class OpenPlatform extends BaseServices {
                 $insert_data[] = [
                     'platform_id' => $platform_id,
                     'appid' => $item['authorizer_appid'] ?? '',
-                    'refreshtoken' => $item['refresh_token'] ?? '',
+                    'refreshtoken' => $item['refresh_token'] != '' ? $item['refresh_token'] : $program_authorization_info['authorizer_refresh_token'],
                     'auth_time' => $item['auth_time'] ?? '',
                     'app_type' => isset($program_authorizer_info['MiniProgramInfo']),
                     'nick_name' => $program_authorizer_info['nick_name'] ?? '',
