@@ -193,7 +193,7 @@ class OpenPlatform extends BaseServices {
      * @return void
      */
     public function delAuthorizerInfo($data){
-        Authorizers::destroy(['appid' => $data['appid']]);
+        Authorizers::destroy(['appid' => $data['AuthorizerAppid']]);
     }
 
     public function getTemplate()
