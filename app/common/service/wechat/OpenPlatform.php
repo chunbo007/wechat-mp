@@ -79,6 +79,9 @@ class OpenPlatform extends BaseServices {
                         case 'updateauthorized':
                             $this->addAuthorizerInfo($message);
                             break;
+                        case 'unauthorized':
+                            $this->delAuthorizerInfo($message);
+                            break;
                         default:
                             break;
                     }
@@ -183,6 +186,14 @@ class OpenPlatform extends BaseServices {
         }else{
             Authorizers::create($insert_data);
         }
+    }
+
+    /**
+     * 删除小程序授权信息
+     * @return void
+     */
+    public function delAuthorizerInfo($data){
+        Authorizers::destroy(['appid' => $data['appid']]);
     }
 
     public function getTemplate()
