@@ -3,16 +3,25 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
         <a-row :gutter="48">
-          <a-col :md="6" :sm="24">
+          <a-col :md="7" :sm="24">
             <a-form-item label="appid">
               <a-input v-model="queryParam.appid" placeholder=""/>
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="24">
+          <a-col :md="7" :sm="24">
             <a-form-item label="InfoType">
-              <a-input v-model="queryParam.infotype" placeholder=""/>
+              <a-select v-model="queryParam.infotype" placeholder="" allow-clear>>
+                <a-select-option v-for="(item) in this.infotype" :value=item>{{ item }}</a-select-option>
+              </a-select>
             </a-form-item>
           </a-col>
+          <a-col :md="7" :sm="24">
+            <a-form-item label="推送内容">
+              <a-input v-model="queryParam.postbody" placeholder=""/>
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <a-row :gutter="48">
           <a-col :md="8" :sm="24">
             <a-form-item label="时间">
               <a-range-picker
@@ -52,7 +61,7 @@
 
 <script>
 import {Ellipsis, STable} from '@/components'
-import {getAuthorizerMessage} from '@/api/message'
+import {getAuthorizerMessage, getInfoTypeMessage} from '@/api/message'
 import Vue from 'vue';
 import VueClipboard from 'vue-clipboard2';
 import Message from "ant-design-vue/lib/message";
@@ -96,6 +105,8 @@ export default {
     return {
       // create model
       columns: columns,
+      // infotype
+      infotype: null,
       // 查询参数
       queryParam: {},
       // 加载数据方法 必须为 Promise 对象
@@ -109,6 +120,9 @@ export default {
     }
   },
   created() {
+    getInfoTypeMessage().then(res => {
+      this.infotype = res.data
+    })
   },
   computed: {},
   methods: {

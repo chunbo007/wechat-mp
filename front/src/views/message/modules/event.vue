@@ -9,13 +9,15 @@
             </a-form-item>
           </a-col>
           <a-col :md="4" :sm="24">
-            <a-form-item label="InfoType">
-              <a-input v-model="queryParam.infotype" placeholder=""/>
+            <a-form-item label="Event">
+              <a-select v-model="queryParam.event" placeholder="" allow-clear>>
+                <a-select-option v-for="(item) in this.eventType" :value=item>{{ item }}</a-select-option>
+              </a-select>
             </a-form-item>
           </a-col>
           <a-col :md="4" :sm="24">
-            <a-form-item label="Event">
-              <a-input v-model="queryParam.event" placeholder=""/>
+            <a-form-item label="推送内容">
+              <a-input v-model="queryParam.postbody" placeholder=""/>
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
@@ -57,7 +59,7 @@
 
 <script>
 import {Ellipsis, STable} from '@/components'
-import {getEventMessage} from '@/api/message'
+import {getEventMessage, getEventTypeMessage} from '@/api/message'
 import Vue from 'vue';
 import VueClipboard from 'vue-clipboard2';
 import Message from "ant-design-vue/lib/message";
@@ -100,6 +102,7 @@ export default {
   data() {
     return {
       columns: columns,
+      eventType: null,
       // 查询参数
       queryParam: {},
       // 加载数据方法 必须为 Promise 对象
@@ -113,6 +116,10 @@ export default {
     }
   },
   created() {
+    getEventTypeMessage().then(res => {
+        this.eventType = res.data
+      console.log(res)
+    })
   },
   computed: {},
   methods: {
