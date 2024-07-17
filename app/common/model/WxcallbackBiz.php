@@ -11,6 +11,7 @@ class WxcallbackBiz extends BaseModel
         ['key' => 'appid', 'name' => 'appid'],
         ['key' => 'msgtype', 'name' => 'msgtype'],
         ['key' => 'event', 'name' => 'event'],
+        ['key' => 'postbody', 'name' => 'postbody', 'where' => 'like'],
         ['key' => 'receivetime', 'name' => 'receivetime', 'where' => 'time_range'],
     ];
     protected $table = 'wxcallback_biz';

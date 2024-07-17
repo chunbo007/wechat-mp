@@ -4,6 +4,8 @@ const api = {
   Authorizer: '/message/list',
   Event: '/message/EventList',
   Forward: '/message/Forward',
+  InfoType: '/message/InfoType',
+  EventType: '/message/EventType',
 }
 
 export function getAuthorizerMessage(parameter) {
@@ -29,3 +31,21 @@ export function getForwardMessage(parameter) {
     data: parameter
   })
 }
+
+export function getInfoTypeMessage(parameter) {
+  return request({
+    url: api.InfoType,
+    method: 'post',
+    data: parameter
+  })
+}
+
+export function getEventTypeMessage(parameter) {
+  return request({
+    url: api.EventType,
+    method: 'post',
+    data: parameter
+  })
+}
+
+

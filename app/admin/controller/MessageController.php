@@ -30,4 +30,14 @@ class MessageController extends BaseController
     {
         return success(WxcallbackForward::list($request));
     }
+
+    public function InfoType(Request $request)
+    {
+        return success(WxcallbackComponent::infoType($request));
+    }
+
+    public function EventType(Request $request)
+    {
+        return success(WxcallbackBiz::eventType($request));
+    }
 }

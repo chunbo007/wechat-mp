@@ -26,4 +26,9 @@ class WxcallbackComponent extends WxcallbackComponentModel
                 'list_rows' => $params['page_size']
             ])->toArray();
     }
+
+    public static function infoType()
+    {
+        return (new static())->group('infotype')->column('infotype');
+    }
 }

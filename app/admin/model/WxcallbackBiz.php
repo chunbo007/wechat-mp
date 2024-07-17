@@ -26,4 +26,10 @@ class WxcallbackBiz extends WxcallbackBiztModel
                 'list_rows' => $params['page_size']
             ])->toArray();
     }
+
+
+    public static function eventType()
+    {
+        return (new static())->group('event')->column('event');
+    }
 }
