@@ -8,6 +8,9 @@
         <a-tab-pane key="2" force-render tab="信息配置">
           <setting/>
         </a-tab-pane>
+        <a-tab-pane key="3" force-render tab="体验者">
+          <tests/>
+        </a-tab-pane>
       </a-tabs>
     </a-card>
   </page-header-wrapper>
@@ -16,12 +19,14 @@
 <script>
 import version from '@/views/authorizer/modules/version'
 import setting from '@/views/authorizer/modules/setting'
+import tests from '@/views/authorizer/modules/tests'
 
 export default {
   name: 'Version',
   components: {
     version,
-    setting
+    setting,
+    tests
   },
   data() {
     return {

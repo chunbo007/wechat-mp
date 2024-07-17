@@ -111,5 +111,19 @@ CREATE TABLE `wxcallback_forward`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT ='请求转发日志';
 
+-- 体验者列表
+CREATE TABLE `tester`
+(
+    `id`                int(10) unsigned NOT NULL AUTO_INCREMENT,
+    `authorizer_appid`  varchar(32)      NOT NULL COMMENT '授权小程序的appid',
+    `wechat_id`         varchar(255)     NOT NULL COMMENT '微信号',
+    `userstr`           varchar(255)     NOT NULL COMMENT 'userstr',
+    `remark`            varchar(255)     DEFAULT NULL COMMENT '备注',
+    `create_time` int(11)          NOT NULL,
+    `update_time` int(11)          NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT ='体验者列表';
+
 INSERT INTO `user` (`id`, `username`, `password`, `create_time`, `update_time`)
 VALUES (1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 1717411365, 1717411365);
