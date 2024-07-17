@@ -18,6 +18,7 @@ use Tinywan\ExceptionHandler\Exception\BadRequestHttpException;
 
 class OpenPlatform extends BaseServices {
     public Application $app;
+    private int $platform_id;
 
     /**
      * @throws DataNotFoundException
@@ -27,6 +28,7 @@ class OpenPlatform extends BaseServices {
      */
     public function __construct($platform_id)
     {
+        $this->platform_id = $platform_id;
         $platform = $this->getPlatformParams($platform_id);
         $this->app = Factory::openPlatform([
             'app_id' => $platform['app_id'],
@@ -161,7 +163,7 @@ class OpenPlatform extends BaseServices {
             $program_authorization_info = $program_authorization_info['authorization_info'];
         }
         $insert_data = [
-            'platform_id' => 5,
+            'platform_id' => $this->platform_id,
             'appid' => $program_authorization_info['authorizer_appid'] ?? '',
             'refreshtoken' => $program_authorization_info['authorizer_refresh_token'] ?? '',
             'auth_time' => time(),
