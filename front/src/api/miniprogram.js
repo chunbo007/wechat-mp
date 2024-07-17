@@ -11,6 +11,9 @@ const api = {
   RevertCodeRelease: '/miniprogram/revertCodeRelease',
   SetDomain: '/miniprogram/setDomain',
   getPcAuthorizerUrl: '/miniprogram/getPcAuthorizerUrl',
+  getTests: '/miniprogram/getTests',
+  bindTester: '/miniprogram/bindTester',
+  unbindTester: '/miniprogram/unbindTester',
 }
 
 export function getDetail(parameter) {
@@ -88,6 +91,30 @@ export function setDomain(parameter) {
 export function getPcAuthorizerUrl(parameter) {
   return request({
     url: api.getPcAuthorizerUrl,
+    method: 'post',
+    data: parameter
+  })
+}
+
+export function getTests(parameter) {
+  return request({
+    url: api.getTests,
+    method: 'post',
+    data: parameter
+  })
+}
+
+export function bindTester(parameter) {
+  return request({
+    url: api.bindTester,
+    method: 'post',
+    data: parameter
+  })
+}
+
+export function unbindTester(parameter) {
+  return request({
+    url: api.unbindTester,
     method: 'post',
     data: parameter
   })

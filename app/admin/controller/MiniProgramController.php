@@ -111,4 +111,34 @@ class MiniProgramController extends BaseController
         return success($data);
     }
 
+    public function getTests(Request $request)
+    {
+        $id = $request->post('id');
+        $row = Authorizers::where('id', $id)->find();
+        $miniprogram = new MiniProgram($row['platform_id']);
+        $result = $miniprogram->getTester($row['appid']);
+        return json(['code' => $result['errcode'], 'msg' => $result['errmsg'], 'data' => $result['members']]);
+    }
+
+    public function bindTester(Request $request)
+    {
+        $id = $request->post('id');
+        $wechatId = $request->post('wechat_id');
+        $remark = $request->post('remark');
+        $row = Authorizers::where('id', $id)->find();
+        $miniprogram = new MiniProgram($row['platform_id']);
+        $result = $miniprogram->bindTester($row['appid'], $wechatId,$remark);
+        return json(['code' => $result['errcode'], 'msg' => $result['errmsg']]);
+    }
+
+    public function unbindTester(Request $request)
+    {
+        $id = $request->post('id');
+        $userstr = $request->post('userstr');
+        $row = Authorizers::where('id', $id)->find();
+        $miniprogram = new MiniProgram($row['platform_id']);
+        $result = $miniprogram->unbindTester($row['appid'], $userstr);
+        return json(['code' => $result['errcode'], 'msg' => $result['errmsg']]);
+    }
+
 }
