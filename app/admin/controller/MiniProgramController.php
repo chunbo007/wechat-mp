@@ -141,4 +141,27 @@ class MiniProgramController extends BaseController
         return json(['code' => $result['errcode'], 'msg' => $result['errmsg']]);
     }
 
+    public function getPrivacy(Request $request)
+    {
+        $id = $request->post('id');
+        $privacyVer = $request->post('privacy_ver');
+        $row = Authorizers::where('id', $id)->find();
+        $miniprogram = new MiniProgram($row['platform_id']);
+        $privacy = $miniprogram->getPrivacy($row['appid'],$privacyVer);
+        $result['code'] = $privacy['errcode'];
+        $result['msg'] = $privacy['errmsg'];
+        $result['data'] = $privacy;
+        return json($result);
+    }
+
+    public function setPrivacy(Request $request)
+    {
+        $id = $request->post('id');
+        $privacy = $request->post('privacy');
+        $row = Authorizers::where('id', $id)->find();
+        $miniprogram = new MiniProgram($row['platform_id']);
+        $result = $miniprogram->setPrivacy($row['appid'],$privacy);
+        return json(['code' => $result['errcode'], 'msg' => $result['errmsg']]);
+    }
+
 }

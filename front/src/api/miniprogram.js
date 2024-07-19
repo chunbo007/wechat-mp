@@ -14,6 +14,8 @@ const api = {
   getTests: '/miniprogram/getTests',
   bindTester: '/miniprogram/bindTester',
   unbindTester: '/miniprogram/unbindTester',
+  getPrivacy: '/miniprogram/getPrivacy',
+  setPrivacy: '/miniprogram/setPrivacy',
 }
 
 export function getDetail(parameter) {
@@ -115,6 +117,22 @@ export function bindTester(parameter) {
 export function unbindTester(parameter) {
   return request({
     url: api.unbindTester,
+    method: 'post',
+    data: parameter
+  })
+}
+
+export function getPrivacy(parameter) {
+  return request({
+    url: api.getPrivacy,
+    method: 'post',
+    data: parameter
+  })
+}
+
+export function setPrivacy(parameter) {
+  return request({
+    url: api.setPrivacy,
     method: 'post',
     data: parameter
   })
