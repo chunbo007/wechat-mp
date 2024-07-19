@@ -20,6 +20,8 @@
 ![版本管理](https://github.com/chunbo007/wechat-mp/assets/16535982/2dbe277d-77ab-4295-9755-9b39dcf3a9ca)
 ![版本管理2](https://github.com/chunbo007/wechat-mp/assets/16535982/92cb9fc4-ace3-4fb8-93e3-f9a039b04e9e)
 ![管理管理3](https://github.com/chunbo007/wechat-mp/assets/16535982/37abf340-e1c7-4538-895a-fe9ac767a14e)
+![体验者](https://github.com/user-attachments/assets/746c115b-f839-4a9e-bbcc-55fef7481690)
+![隐私协议](https://github.com/user-attachments/assets/6d381d8f-2ec6-4953-9cd1-2d9de7fc59b3)
 ![开放平台](https://github.com/chunbo007/wechat-mp/assets/16535982/5a3ef41d-5257-4051-a450-2f67907d1fe5)
 ![开放平台2](https://github.com/chunbo007/wechat-mp/assets/16535982/9d195873-62a2-4483-ae27-9fdb9b2166e0)
 ![消息日志](https://github.com/chunbo007/wechat-mp/assets/16535982/7fa50073-c979-43c5-aaeb-30386f1ab1b6)
