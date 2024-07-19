@@ -230,4 +230,21 @@ class MiniProgram extends OpenPlatform
     {
         return $this->getMiniProgram($appid)->tester->unbind(null,$userStr);
     }
+
+    /**
+     * 获取小程序隐私设置
+     * @param $appid
+     * @param int $privacyVer | 1: 现网版本 2: 开发版本
+     * @return mixed
+     */
+    public function getPrivacy($appid, int $privacyVer = 2)
+    {
+        return $this->getMiniProgram($appid)->base->httpPostJson('cgi-bin/component/getprivacysetting', [ 'privacy_ver' => $privacyVer ]);
+    }
+
+    public function setPrivacy($appid, $privacy)
+    {
+        $privacy = json_decode($privacy,true);
+        return $this->getMiniProgram($appid)->privacy->set($privacy);
+    }
 }
