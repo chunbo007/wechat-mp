@@ -69,7 +69,8 @@ class OpenPlatform extends BaseServices {
             $symfony_request = new SymfonyRequest($request->get(), $request->post(), [], $request->cookie(), [], [], $request->rawBody());
             $symfony_request->headers = new HeaderBag($request->header());
             $this->app->rebind('request', $symfony_request);
-            $this->app->server->push(function ($message) use ($appid) {
+            // 授权事件
+            $this->app->server->push(function ($message) {
                 if (isset($message['InfoType'])) {
                     // 授权事件 日志记录
                     $this->addComponentCallBackRecord($message);
@@ -84,11 +85,13 @@ class OpenPlatform extends BaseServices {
                         default:
                             break;
                     }
-                } else if (isset($message['MsgType'])) {
-                    // 消息与事件通知 日志记录
-                    $this->addWxcallbackBizRecord($message, $appid);
                 }
             });
+            // 消息与事件通知 日志记录
+            $message = $this->app->server->getMessage();
+            if (isset($message['Event'])) {
+                $this->addWxcallbackBizRecord($message, $appid);
+            }
 
             $response = $this->app->server->serve();
             return $response->getContent();

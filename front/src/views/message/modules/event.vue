@@ -76,13 +76,13 @@ const columns = [
     width: 180
   },
   {
-    title: 'appid',
+    title: 'authorizer_appid',
     dataIndex: 'appid',
     width: 180
   },
   {
-    title: 'MsgType',
-    dataIndex: 'msgtype',
+    title: 'event',
+    dataIndex: 'event',
     width: 220
   },
   {
