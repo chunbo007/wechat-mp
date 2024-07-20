@@ -78,7 +78,7 @@ const columns = [
     width: 180
   },
   {
-    title: 'appid',
+    title: 'component_appid',
     dataIndex: 'appid',
     width: 180
   },
