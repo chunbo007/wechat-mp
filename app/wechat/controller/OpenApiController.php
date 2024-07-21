@@ -7,6 +7,7 @@ namespace app\wechat\controller;
 use app\admin\model\Platform;
 use app\common\model\TrialRecords;
 use app\common\service\wechat\MiniProgram;
+use app\common\service\wechat\OfficialAccount;
 use EasyWeChat\Kernel\Exceptions\HttpException;
 use EasyWeChat\Kernel\Exceptions\InvalidArgumentException;
 use EasyWeChat\Kernel\Exceptions\InvalidConfigException;
@@ -63,6 +64,22 @@ class OpenApiController extends BaseController
             'component_access_token' => $component_access_token,
             'authorizer_appid' => $appid,
             'authorizer_access_token' => $authorizer_access_token
+        ];
+        return success($result);
+    }
+
+    /**
+     * 获取公众号access_token
+     * @param Request $request
+     * @return array|Response
+     */
+    public function getOfficialToken(Request $request)
+    {
+        $officialAccount = new OfficialAccount();
+        $accessToken = $officialAccount::getApp()->access_token;
+        $token = $accessToken->getToken();
+        $result = [
+            'access_token' => $token['access_token']
         ];
         return success($result);
     }
