@@ -18,7 +18,7 @@ use Tinywan\ExceptionHandler\Exception\BadRequestHttpException;
 
 class OpenPlatform extends BaseServices {
     public Application $app;
-    private int $platform_id;
+    private $platform_id;
 
     /**
      * @throws DataNotFoundException
