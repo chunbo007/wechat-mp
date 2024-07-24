@@ -27,12 +27,12 @@ class IndexController extends BaseController
             $key = 'wechat_mp_' . md5(json_encode($xml));
             if (Cache::has($key)) {
                 Log::info('收到重复请求，已过滤');
-                return '请求重复';
+                return 'success';
             } else {
-                Cache::set($key, '', 3);
+                Cache::set($key, '', 10);
             }
             $xml = simplexml_load_string($xml);
-            if (empty($xml)) return '请求体为空';
+            if (empty($xml)) return 'success';
             if ($appid) {
                 // 转发消息与事件推送请求给第三方
                 $forwardResult = Forward::run($request, $appid, 'app');

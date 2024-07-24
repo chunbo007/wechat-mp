@@ -8,6 +8,7 @@ use app\common\service\BaseServices;
 use EasyWeChat\Factory;
 use EasyWeChat\OpenPlatform\Application;
 use support\Log;
+use support\Cache;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use think\db\exception\DataNotFoundException;
@@ -76,8 +77,16 @@ class OpenPlatform extends BaseServices {
                     $this->addComponentCallBackRecord($message);
                     switch ($message['InfoType']) {
                         case 'notify_third_fastregisterbetaapp':
+                            // 过滤掉重复请求
+                            $key = 'wechat_mp_' . md5(json_encode($message));
+                            if (Cache::has($key)) {
+                                Log::info('收到重复注册试用小程序请求，已过滤');
+                                return 'success';
+                            } else {
+                                Cache::set($key, '', 10);
+                            }
                             FastRegisterApp::callback($message);
-                            break;
+                            return 'success';
                         case 'authorized':
                         case 'updateauthorized':
                             $this->addAuthorizerInfo($message);
@@ -89,6 +98,7 @@ class OpenPlatform extends BaseServices {
                             break;
                     }
                 }
+                return 'success';
             });
             // 消息与事件通知 日志记录
             $message = $this->app->server->getMessage();

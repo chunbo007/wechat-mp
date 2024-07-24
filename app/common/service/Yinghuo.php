@@ -140,7 +140,8 @@ class Yinghuo
             "form" => [
                 "enabled" => true,
                 "app_id" => $appid,
-                "app_secret" => "fastRegisterApp"
+                "app_secret" => "fastRegisterApp",
+                "enableShipping" => false,
             ]
         ];
         return $this->curl('/store/client.wxapp.setting/update', $data, 'store');
