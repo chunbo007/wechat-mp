@@ -1,3 +1,11 @@
+# 广告
+开发了一款SaaS化的中台，[云管家](https://www.isvapi.com)[https://www.isvapi.com](https://www.isvapi.com)，不想自己花时间搭建二开的朋友也可以直接去看看这个，当前这个开源项目仍然可以正常使用，功能不受影响
+
+# 在线交流
+| 个人微信 | 微信群 |
+| :---: | :---: |
+| <img src="http://img.isvapi.com/www/images/wechat/wechat-qrcode.jpg" alt="个人微信" width=260>| <img src="https://img.isvapi.com/www/images/wechat/wechat-group.jpg" alt="微信群" width=260> |
+
 # wechat-mp 项目简介
 微信开放平台管理工具
 微信开放平台服务商一般有多套小程序需要管理，帮人代开发时需要客户不停扫码授权，体验极其不好。对于SAAS小程序服务商也可以在运维平台中尝试二开对接开放平台的api，但是项目多了以后每个运营平台都需要重复造轮子，而且维护成本也高，所以萌生了写一个通用管理微信开放平台的工具。
@@ -19,7 +27,6 @@
 2. 前端 [ant-design-vue-pro](https://pro.antdv.com/docs/getting-started)
 3. SDK [EasyWechat](https://easywechat.com)
 
-
 # 本地搭建视频教程
 [wechat-mp 微信开放平台小程序管理工具本地部署教程](https://www.bilibili.com/video/BV1M7421f7Ff)
 
@@ -40,6 +47,7 @@
 # 安装步骤
 
 1. 下载代码
+
     ```
     // github
     git clone https://github.com/chunbo007/wechat-mp.git
