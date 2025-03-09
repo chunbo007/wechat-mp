@@ -209,7 +209,7 @@ class OpenPlatform extends BaseServices {
             'appid' => $data['AppId'],
             'authorizer_appid' => $data['AuthorizerAppid'] ?? null,
             'infotype' => $data['InfoType'],
-            'postbody' => json_encode($data),
+            'postbody' => json_encode($data, JSON_UNESCAPED_UNICODE),
             'receivetime' => $data['CreateTime']
         ];
         WxcallbackComponent::create($row);
@@ -222,7 +222,7 @@ class OpenPlatform extends BaseServices {
             'tousername' => $data['ToUserName'],
             'msgtype' => $data['MsgType'],
             'event' => $data['Event'],
-            'postbody' => json_encode($data),
+            'postbody' => json_encode($data, JSON_UNESCAPED_UNICODE),
             'receivetime' => $data['CreateTime']
         ];
         WxcallbackBiz::create($row);
