@@ -6,6 +6,24 @@
         <div>授权帐号指的是获得公众号或者小程序管理员授权的帐号，服务商可为授权帐号提供代开发、代运营等服务。</div>
       </div>
     </template>
+    <!-- 没有平台时的提示 -->
+    <a-alert
+      v-if="!currentPlatform || !currentPlatform.id"
+      message="尚未配置开放平台"
+      description="在使用授权功能之前，您需要先在「开放平台管理」中添加微信开放平台信息，并设置一个为默认平台。"
+      type="warning"
+      show-icon
+      style="margin-bottom: 16px;"
+    >
+      <template slot="icon">
+        <a-icon type="exclamation-circle" />
+      </template>
+      <template slot="action">
+        <a-button type="primary" @click="() => $router.push('/platform/account')">
+          前往配置
+        </a-button>
+      </template>
+    </a-alert>
     <a-card :bordered="false">
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
@@ -245,6 +263,16 @@ export default {
       queryParam: {},
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
+        // 检查是否有当前平台
+        if (!this.currentPlatform || !this.currentPlatform.id) {
+          return Promise.resolve({
+            current_page: 1,
+            per_page: 10,
+            total: 0,
+            last_page: 0,
+            data: []
+          })
+        }
         const requestParameters = Object.assign({platform_id: this.currentPlatform.id}, parameter, this.queryParam)
         return getAuthorizer(requestParameters)
           .then(res => {
@@ -273,6 +301,10 @@ export default {
   methods: {
     refresh() {
       // console.log(this.$store.state.platform.currentPlatform)
+      if (!this.currentPlatform || !this.currentPlatform.id) {
+        Message.error('请先在「开放平台管理」中添加平台并设置为默认')
+        return
+      }
       this.refreshButton = true
       refresh({platform_id: this.currentPlatform.id}).then(res => {
         Message.success(res['msg'])
@@ -283,6 +315,10 @@ export default {
     },
 
     getToken(appid) {
+      if (!this.currentPlatform || !this.currentPlatform.id) {
+        Message.error('请先在「开放平台管理」中添加平台并设置为默认')
+        return
+      }
       let params = {
         platform_id: this.currentPlatform.id,
         appid: appid
@@ -302,6 +338,10 @@ export default {
     },
 
     getTokenLink(appid) {
+      if (!this.currentPlatform || !this.currentPlatform.id) {
+        Message.error('请先在「开放平台管理」中添加平台并设置为默认')
+        return
+      }
       const url = window.location.origin + '/openapi/getToken?platform_appid=' + this.currentPlatform['app_id'] + '&appid=' + appid
       navigator.clipboard.writeText(url)
         .then(() => {
@@ -313,6 +353,10 @@ export default {
     },
 
     getRefreshToken(appid) {
+      if (!this.currentPlatform || !this.currentPlatform.id) {
+        Message.error('请先在「开放平台管理」中添加平台并设置为默认')
+        return
+      }
       let params = {
         platform_id: this.currentPlatform.id,
         appid: appid
@@ -331,6 +375,10 @@ export default {
     },
 
     originalMessage(appid) {
+      if (!this.currentPlatform || !this.currentPlatform.id) {
+        Message.error('请先在「开放平台管理」中添加平台并设置为默认')
+        return
+      }
       let params = {
         platform_id: this.currentPlatform.id,
         appid: appid
@@ -351,6 +399,10 @@ export default {
     },
 
     addAuthorizer() {
+      if (!this.currentPlatform || !this.currentPlatform.id) {
+        Message.error('请先在「开放平台管理」中添加平台并设置为默认')
+        return
+      }
       this.addAuthorizerLoading = true
       this.addAuthorizerVisible = true
       getPcAuthorizerUrl({id: this.currentPlatform.id}).then(res => {

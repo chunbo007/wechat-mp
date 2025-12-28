@@ -2,7 +2,7 @@ import {getPlatform} from "@/api/platform";
 
 const platform = {
   state: {
-    platformList: {},
+    platformList: [],
     currentPlatform: {}
   },
 

@@ -37,10 +37,23 @@ export default {
   created() {
     if (Object.keys(this.current).length === 0) {
       this.current_name = '切换应用'
-      const defaultPlatform = this.platform.find(item => item['is_default'] === 1)
-      this.SetPlatform(defaultPlatform).then(() => {
-        this.current_name = this.current.name
-      })
+      // 检查 platform 是否为数组且有数据
+      if (Array.isArray(this.platform) && this.platform.length > 0) {
+        const defaultPlatform = this.platform.find(item => item['is_default'] === 1)
+        if (defaultPlatform) {
+          this.SetPlatform(defaultPlatform).then(() => {
+            this.current_name = this.current.name
+          })
+        } else {
+          // 如果没有默认平台，给出提示
+          console.warn('未找到默认开放平台，请先在「开放平台管理」中添加平台并设置为默认')
+          this.current_name = '请先添加平台'
+        }
+      } else {
+        // platform 为空或不是数组
+        console.warn('未找到开放平台数据，请先在「开放平台管理」中添加平台')
+        this.current_name = '请先添加平台'
+      }
     } else {
       this.current_name = this.current.name
     }
