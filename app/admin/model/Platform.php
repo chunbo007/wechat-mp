@@ -37,6 +37,13 @@ class Platform extends PlatformModel
             if (isset($data['is_default']) && $data['is_default'] == 1) {
                 self::where('is_default', 1)->update(['is_default' => 0]);
             }
+            // 为未填写的字段设置默认值，确保数据库必填字段有值
+            if (!isset($data['return_forward_platform']) || $data['return_forward_platform'] === false) {
+                $data['return_forward_platform'] = 0;
+            }
+            if (!isset($data['return_forward_app']) || $data['return_forward_app'] === false) {
+                $data['return_forward_app'] = 0;
+            }
             self::create($data);
         } catch (\Exception $e) {
             throw new BadRequestHttpException($e->getMessage());
