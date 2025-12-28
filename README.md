@@ -42,9 +42,10 @@
 ![消息日志](https://github.com/chunbo007/wechat-mp/assets/16535982/7fa50073-c979-43c5-aaeb-30386f1ab1b6)
 ![转发日志](https://github.com/chunbo007/wechat-mp/assets/16535982/9614e728-5a9e-4438-83d8-f736c2fbd17c)
 
+# 不想二开，直接使用
+当前页面右方有个发行版，点击最新版，里面有具体的使用步骤，下载zip跟着操作即可
 
-
-# 安装步骤
+# 本地二开步骤
 
 1. 下载代码
 
