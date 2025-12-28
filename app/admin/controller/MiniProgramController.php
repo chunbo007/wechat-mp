@@ -12,7 +12,7 @@ class MiniProgramController extends BaseController
     public function detail(Request $request)
     {
         $id = $request->post('id');
-        $row = Authorizers::where('id', $id)->find()->toArray();
+        $row = Authorizers::where('id', $id)->findOrEmpty()->toArray();
         $miniprogram = new MiniProgram($row['platform_id']);
         $version_detail = $miniprogram->getVersionDetail($row['appid']);
         $row = array_merge($row, $version_detail);

@@ -182,6 +182,8 @@ class MiniProgram extends OpenPlatform
                     'userstr'  => $userstr,
                     'remark'   => '未知',
                     'wechat_id' => '未知',
+                    'create_time' => time(),
+                    'update_time' => time(),
                 ];
                 array_push($insertData, $data);
             }
