@@ -5,7 +5,6 @@ use app\admin\model\Authorizers;
 use app\common\model\WxcallbackBiz;
 use app\common\model\WxcallbackComponent;
 use app\common\service\BaseServices;
-use EasyWeChat\Factory;
 use EasyWeChat\OpenPlatform\Application;
 use support\Log;
 use Symfony\Component\HttpFoundation\HeaderBag;
@@ -19,6 +18,7 @@ use Tinywan\ExceptionHandler\Exception\BadRequestHttpException;
 class OpenPlatform extends BaseServices {
     public Application $app;
     private $platform_id;
+    public $api;
 
     /**
      * @throws DataNotFoundException
@@ -30,30 +30,13 @@ class OpenPlatform extends BaseServices {
     {
         $this->platform_id = $platform_id;
         $platform = $this->getPlatformParams($platform_id);
-        $this->app = Factory::openPlatform([
+        $this->app = new Application([
             'app_id' => $platform['app_id'],
             'secret' => $platform['secret'],
             'token' => $platform['token'],
             'aes_key' => $platform['aes_key'],
-            'debug' => true,
-            'log' => [
-                'default' => env('APP_DEBUG') ? 'dev' : 'prod', // 默认使用的 channel，生产环境可以改为下面的 prod
-                'channels' => [
-                    // 测试环境
-                    'dev' => [
-                        'driver' => 'single',
-                        'path' => runtime_path("logs/wechat-" . date('Y-m-d') . ".log"),
-                        'level' => 'debug',
-                    ],
-                    // 生产环境
-                    'prod' => [
-                        'driver' => 'daily',
-                        'path' => runtime_path("logs/wechat-" . date('Y-m-d') . ".log"),
-                        'level' => 'info',
-                    ],
-                ],
-            ],
         ]);
+        $this->api = $this->app->getClient();
     }
 
     /**
@@ -68,33 +51,37 @@ class OpenPlatform extends BaseServices {
         try {
             $symfony_request = new SymfonyRequest($request->get(), $request->post(), [], $request->cookie(), [], [], $request->rawBody());
             $symfony_request->headers = new HeaderBag($request->header());
-            $this->app->rebind('request', $symfony_request);
-            // 授权事件
-            $this->app->server->push(function ($message) {
-                if (isset($message['InfoType'])) {
-                    // 授权事件 日志记录
-                    $this->addComponentCallBackRecord($message);
-                    switch ($message['InfoType']) {
-                        case 'authorized':
-                        case 'updateauthorized':
-                            $this->addAuthorizerInfo($message);
-                            break;
-                        case 'unauthorized':
-                            $this->delAuthorizerInfo($message);
-                            break;
-                        default:
-                            break;
-                    }
+            $this->app->setRequestFromSymfonyRequest($symfony_request);
+            
+            $server = $this->app->getServer();
+            $response = $server->serve();
+            // 获取消息解密后的内容
+            $message = $server->getDecryptedMessage();
+            unset($message['Encrypt']);
+
+            // 开放平台消息
+            if (isset($message['InfoType'])) {
+                // 授权事件 日志记录
+                $this->addComponentCallBackRecord($message);
+                switch ($message['InfoType']) {
+                    case 'authorized':
+                    case 'updateauthorized':
+                        $this->addAuthorizerInfo($message);
+                        break;
+                    case 'unauthorized':
+                        $this->delAuthorizerInfo($message);
+                        break;
+                    default:
+                        break;
                 }
-            });
-            // 消息与事件通知 日志记录
-            $message = $this->app->server->getMessage();
-            if (isset($message['Event'])) {
+            }
+            // 应用消息
+            else if (isset($message['Event'])) {
+                // 消息与事件通知 日志记录
                 $this->addWxcallbackBizRecord($message, $appid);
             }
 
-            $response = $this->app->server->serve();
-            return $response->getContent();
+            return $response->getBody()->getContents();
         } catch (\Exception $e){
             Log::error($e->getMessage());
             return $e->getMessage();
@@ -112,12 +99,17 @@ class OpenPlatform extends BaseServices {
             Db::startTrans();
             $model = new Authorizers();
             $model->where('platform_id', $platform_id)->delete();
-            $list = $this->app->getAuthorizers();
+            $list = $this->api->postJson('/cgi-bin/component/api_get_authorizer_list', [
+                'component_appid' => $this->app->getAccount()->getAppId(),
+                'offset' => 0,
+                'count' => 500
+            ])->toArray();
             $insert_data = [];
-            foreach ($list['list'] as $item) {
-                $program = $this->app->getAuthorizer($item['authorizer_appid']);
-                $program_authorizer_info = $program['authorizer_info'];
-                $program_authorization_info = $program['authorization_info'];
+            if (isset($list['list'])) {
+                foreach ($list['list'] as $item) {
+                    $program = $this->getAuthorizerInfo($item['authorizer_appid']);
+                    $program_authorizer_info = $program['authorizer_info'];
+                    $program_authorization_info = $program['authorization_info'];
                 $insert_data[] = [
                     'platform_id' => $platform_id,
                     'appid' => $item['authorizer_appid'] ?? '',
@@ -139,6 +131,7 @@ class OpenPlatform extends BaseServices {
                     'json_data' => json_encode($program, true),
                 ];
             }
+            }
             $model->saveAll($insert_data);
             Db::commit();
         } catch (\Exception $e) {
@@ -152,14 +145,17 @@ class OpenPlatform extends BaseServices {
      * */
     public function addAuthorizerInfo($data)
     {
-        $program = $this->app->getAuthorizer($data['AuthorizerAppid']);
+        $program = $this->getAuthorizerInfo($data['AuthorizerAppid']);
         $program_authorizer_info = $program['authorizer_info'];
         $program_authorization_info = $program['authorization_info'];
         // 有时候平台不返回refresh_token，需要根据code手动去获取refresh_token
         // 刷新令牌authorizer_refresh_token是需要一直保存的？有有效期这个说法吗？
         // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/troubleshooting/TroubleShooting.html
-        if (!$program_authorization_info['authorizer_refresh_token']){
-            $program_authorization_info = $this->app->handleAuthorize($data['AuthorizationCode']);
+        if (!$program_authorization_info['authorizer_refresh_token'] && isset($data['AuthorizationCode'])){
+            $program_authorization_info = $this->api->postJson('/cgi-bin/component/api_query_auth', [
+                'component_appid' => $this->app->getAccount()->getAppId(),
+                'authorization_code' => $data['AuthorizationCode']
+            ])->toArray();
             $program_authorization_info = $program_authorization_info['authorization_info'];
         }
         $insert_data = [
@@ -200,7 +196,7 @@ class OpenPlatform extends BaseServices {
 
     public function getTemplate()
     {
-        return $this->app->code_template->list();
+        return $this->api->get('/wxa/gettemplatelist')->toArray();
     }
 
     private function addComponentCallBackRecord($data)
@@ -230,13 +226,29 @@ class OpenPlatform extends BaseServices {
 
     public function getPcAuthorizerUrl()
     {
-        $pre_code = $this->app->createPreAuthorizationCode();
         $callback = env('SITE_URL') . '/auth/callback';
-        $pc_url = $this->app->getPreAuthorizationUrl($callback, $pre_code);
-        $mobile_url = $this->app->getMobilePreAuthorizationUrl($callback, $pre_code);
+        $pc_url = $this->app->createPreAuthorizationUrl($callback);
+        $mobile_url = 'https://open.weixin.qq.com/wxaopen/safe/bindcomponent?action=bindcomponent&no_scan=1&component_appid='.$this->app->getAccount()->getAppId().'&pre_auth_code='.($this->app->createPreAuthorizationCode()['pre_auth_code']).'&redirect_uri='.$callback.'&auth_type=3#wechat_redirect';
         return [
             'pc_url' => urlencode($pc_url),
             'mobile_url' => urlencode($mobile_url)
         ];
+    }
+
+    /**
+     * 获取授权方信息
+     * @param $authorizerAppid
+     * @return array
+     */
+    public function getAuthorizerInfo($authorizerAppid)
+    {
+        $result = $this->api->postJson('/cgi-bin/component/api_get_authorizer_info', [
+            'component_appid' => $this->app->getAccount()->getAppId(),
+            'authorizer_appid' => $authorizerAppid
+        ])->toArray();
+        if (isset($result['errcode']) && $result['errcode'] !== 0) {
+            throw new BadRequestHttpException('获取授权方信息失败: '.$result['errcode'].' '.$result['errmsg']);
+        }
+        return $result;
     }
 }

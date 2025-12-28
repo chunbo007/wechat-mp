@@ -4,40 +4,39 @@ namespace app\common\service\wechat;
 
 
 use app\admin\model\Authorizers;
-use EasyWeChat\Kernel\Exceptions\InvalidConfigException;
-use EasyWeChat\Kernel\Http\Response;
-use EasyWeChat\Kernel\Support\Collection;
-use GuzzleHttp\Exception\GuzzleException;
-use Psr\Http\Message\ResponseInterface;
 use Tinywan\ExceptionHandler\Exception\BadRequestHttpException;
 use app\admin\model\Tester;
 
 class MiniProgram extends OpenPlatform
 {
-    public function getMiniProgram($appid): \EasyWeChat\OpenPlatform\Authorizer\MiniProgram\Application
+    public $miniApp;
+    public $api;
+
+    public function getMiniProgram($appid)
     {
         $platform = Authorizers::where('appid', $appid)->find();
-        return $this->app->miniProgram($platform['appid'], $platform['refreshtoken']);
+        $this->miniApp = $this->app->getMiniAppWithRefreshToken($platform['appid'], $platform['refreshtoken']);
+        $this->api = $this->miniApp->getClient();
+        return $this->miniApp;
     }
 
     /**
      * 获取当前小程序代码信息
      * @param $appid
      * @return array
-     * @throws GuzzleException
-     * @throws InvalidConfigException
      * @throws BadRequestHttpException
      */
     public function getVersionDetail($appid): array
     {
         try {
+            $this->getMiniProgram($appid);
             $result = [];
             $version = $this->getVersionInfo($appid);
             if (!empty($version['release_info'])) {
-                $version['release_info']['release_qrcode'] = base64_encode($this->getQrCode($appid));
+                $version['release_info']['release_qrcode'] = $this->getQrCode($appid);
             }
             if (!empty($version['exp_info'])) {
-                $version['exp_info']['exp_qrcode'] = base64_encode($this->getExpQrCode($appid));
+                $version['exp_info']['exp_qrcode'] = $this->getExpQrCode($appid);
             }
             $lastAuditResult = $this->getLatestAuditStatus($appid);
             if ($lastAuditResult['errcode'] == 0) {
@@ -54,7 +53,8 @@ class MiniProgram extends OpenPlatform
     public function getToken($appid): array
     {
         try {
-            return $this->getMiniProgram($appid)->access_token->getToken();
+            $this->getMiniProgram($appid);
+            return ['authorizer_access_token' => $this->miniApp->getAccessToken()->getToken()];
         } catch (\Exception $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
@@ -67,7 +67,8 @@ class MiniProgram extends OpenPlatform
      */
     public function getVisitStatus($appid)
     {
-        return $this->getMiniProgram($appid)->base->httpPostJson('wxa/getvisitstatus', []);
+        $this->getMiniProgram($appid);
+        return $this->api->postJson('/wxa/getvisitstatus', [])->toArray();
     }
 
     /**
@@ -77,98 +78,107 @@ class MiniProgram extends OpenPlatform
      */
     public function getVersionInfo($appid)
     {
-        return $this->getMiniProgram($appid)->base->httpPostJson('wxa/getversioninfo', []);
+        return $this->api->postJson('/wxa/getversioninfo', [])->toArray();
     }
 
     /**
      * 获取小程序码
      * @param $appid
-     * @return array|Collection|object|ResponseInterface|string
+     * @return string
      */
     public function getQrCode($appid)
     {
-        return $this->getMiniProgram($appid)->app_code->getUnlimit('wxcomponent');
+        return $this->api->postJson('/wxa/getwxacodeunlimit', ['scene' => 'wxcomponent'])->toDataUrl();
     }
 
     /**
      * 获取体验版二维码
      * @param $appid
-     * @return Response
-     * @throws InvalidConfigException
-     * @throws GuzzleException
+     * @return string
      */
     public function getExpQrCode($appid)
     {
-        return $this->getMiniProgram($appid)->code->getQrCode();
+        return $this->api->get('/wxa/get_qrcode', [])->toDataUrl();
     }
 
     /**
      * 获取最后一次审核状态
      * @param $appid
-     * @return array|Collection|object|ResponseInterface|string
-     * @throws InvalidConfigException
+     * @return array
      */
     public function getLatestAuditStatus($appid)
     {
-        return $this->getMiniProgram($appid)->code->getLatestAuditStatus();
+        return $this->api->get('/wxa/get_latest_auditstatus', [])->toArray();
     }
 
     /**
      * 上传代码并生成体验版
      * @param $appid
      * @param $data
-     * @return array|Collection|object|ResponseInterface|string
-     * @throws GuzzleException
-     * @throws InvalidConfigException
+     * @return array
      */
     public function commit($appid, $data)
     {
+        $this->getMiniProgram($appid);
         $template_id = $data['template_id'];
         $ext_json = $data['ext_json'];
         $user_version = $data['user_version'];
         $user_desc = $data['user_desc'];
-        return $this->getMiniProgram($appid)->code->commit($template_id, $ext_json, $user_version, $user_desc);
+        return $this->api->postJson('/wxa/commit', [
+            'template_id' => $template_id,
+            'ext_json' => $ext_json,
+            'user_version' => $user_version,
+            'user_desc' => $user_desc
+        ])->toArray();
     }
 
     public function getCategory($appid)
     {
-        return $this->getMiniProgram($appid)->code->getCategory();
+        $this->getMiniProgram($appid);
+        return $this->api->get('/wxa/get_category')->toArray();
     }
 
     public function submitAudit($appid, $data)
     {
-        return $this->getMiniProgram($appid)->code->submitAudit($data);
+        $this->getMiniProgram($appid);
+        return $this->api->postJson('/wxa/submit_audit', $data)->toArray();
     }
 
     public function undoAudit($appid)
     {
-        return $this->getMiniProgram($appid)->code->withdrawAudit();
+        $this->getMiniProgram($appid);
+        return $this->api->get('/wxa/undocodeaudit')->toArray();
     }
 
     public function speedupCodeAudit($appid, $auditid)
     {
-        return $this->getMiniProgram($appid)->code->speedupAudit((int)$auditid);
+        $this->getMiniProgram($appid);
+        return $this->api->postJson('/wxa/speedupaudit', ['auditid' => (int)$auditid])->toArray();
     }
 
     public function release($appid)
     {
-        return $this->getMiniProgram($appid)->code->release();
+        $this->getMiniProgram($appid);
+        return $this->api->postJson('/wxa/release')->toArray();
     }
 
     public function revertCodeRelease($appid)
     {
-        return $this->getMiniProgram($appid)->code->rollbackRelease();
+        $this->getMiniProgram($appid);
+        return $this->api->get('/wxa/revertcoderelease')->toArray();
     }
 
     public function setDomain($appid, $params)
     {
+        $this->getMiniProgram($appid);
         $params['action'] = 'set';
-        return $this->getMiniProgram($appid)->domain->modify($params);
+        return $this->api->postJson('/wxa/modify_domain', $params)->toArray();
     }
 
     public function getTester($appid)
     {
-        $result = $this->getMiniProgram($appid)->tester->list();
+        $this->getMiniProgram($appid);
+        $result = $this->api->postJson('/wxa/memberauth', ['action' => 'get_experiencer'])->toArray();
         if ($result['errcode'] == 0) {
             $dbTester = Tester::where('authorizer_appid', $appid)->select()->toArray();
             $txTesterUserstrs = array_column($result['members'], 'userstr');
@@ -202,7 +212,8 @@ class MiniProgram extends OpenPlatform
 
     public function bindTester($appid, $wechatId, $remark)
     {
-        $result = $this->getMiniProgram($appid)->tester->bind($wechatId);
+        $this->getMiniProgram($appid);
+        $result = $this->api->postJson('/wxa/bind_tester', ['wechatid' => $wechatId])->toArray();
         if ($result['errcode'] == 0) {
             $data = [
                 'authorizer_appid' => $appid,
@@ -217,7 +228,8 @@ class MiniProgram extends OpenPlatform
 
     public function unbindTester($appid, $userStr)
     {
-        return $this->getMiniProgram($appid)->tester->unbind(null,$userStr);
+        $this->getMiniProgram($appid);
+        return $this->api->postJson('/wxa/unbind_tester', ['userstr' => $userStr])->toArray();
     }
 
     /**
@@ -228,12 +240,14 @@ class MiniProgram extends OpenPlatform
      */
     public function getPrivacy($appid, int $privacyVer = 2)
     {
-        return $this->getMiniProgram($appid)->base->httpPostJson('cgi-bin/component/getprivacysetting', [ 'privacy_ver' => $privacyVer ]);
+        $this->getMiniProgram($appid);
+        return $this->api->postJson('/cgi-bin/component/getprivacysetting', ['privacy_ver' => $privacyVer])->toArray();
     }
 
     public function setPrivacy($appid, $privacy)
     {
-        $privacy = json_decode($privacy,true);
-        return $this->getMiniProgram($appid)->privacy->set($privacy);
+        $this->getMiniProgram($appid);
+        $privacy = json_decode($privacy, true);
+        return $this->api->postJson('/cgi-bin/component/setprivacysetting', $privacy)->toArray();
     }
 }

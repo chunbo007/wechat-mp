@@ -4,10 +4,6 @@ namespace app\wechat\controller;
 
 use app\admin\model\Platform;
 use app\common\service\wechat\MiniProgram;
-use EasyWeChat\Kernel\Exceptions\HttpException;
-use EasyWeChat\Kernel\Exceptions\InvalidArgumentException;
-use EasyWeChat\Kernel\Exceptions\InvalidConfigException;
-use EasyWeChat\Kernel\Exceptions\RuntimeException;
 use support\Request;
 use support\Response;
 use think\db\exception\DataNotFoundException;
@@ -24,12 +20,7 @@ class OpenApiController
      * @throws BadRequestHttpException
      * @throws DataNotFoundException
      * @throws DbException
-     * @throws HttpException
-     * @throws InvalidArgumentException
-     * @throws InvalidConfigException
      * @throws ModelNotFoundException
-     * @throws RuntimeException
-     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function getToken(Request $request)
     {
@@ -50,7 +41,7 @@ class OpenApiController
         }
 
         // 获取 component_access_token
-        $component_access_token = $app->app->access_token->getToken()['component_access_token'];
+        $component_access_token = $app->app->getAccessToken()->getToken();
 
         // 获取 authorizer_access_token
         $authorizer_access_token = $app->getToken($appid)['authorizer_access_token'];
