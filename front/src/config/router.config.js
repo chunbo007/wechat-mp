@@ -74,6 +74,12 @@ export const asyncRouterMap = [
  */
 export const constantRouterMap = [
   {
+    path: '/install',
+    name: 'install',
+    component: () => import(/* webpackChunkName: "install" */ '@/views/install/InstallWizard'),
+    hidden: true
+  },
+  {
     path: '/user',
     component: UserLayout,
     redirect: '/user/login',

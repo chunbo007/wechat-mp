@@ -14,6 +14,23 @@
 
 use Webman\Route;
 
+// 安装向导
+Route::any('/install', [app\admin\controller\InstallController::class, 'index']);
+Route::group('/admin/install', function () {
+    Route::get('/', [app\admin\controller\InstallController::class, 'index']);
+    Route::get('/step', [app\admin\controller\InstallController::class, 'step']);
+    Route::get('/checkEnv', [app\admin\controller\InstallController::class, 'checkEnv']);
+    Route::post('/testDb', [app\admin\controller\InstallController::class, 'testDb']);
+    Route::post('/install', [app\admin\controller\InstallController::class, 'install']);
+    Route::get('/checkInstall', [app\admin\controller\InstallController::class, 'checkInstall']);
+});
+// Nginx配置测试
+Route::group('/admin', function () {
+    Route::get('/nginxTest/admin', [app\admin\controller\UserController::class, 'nginxTest']);
+    Route::get('/nginxTest/wechat', [app\wechat\controller\IndexController::class, 'nginxTest']);
+    Route::get('/nginxTest/openapi', [app\wechat\controller\OpenApiController::class, 'nginxTest']);
+});
+
 // 发起微信授权
 Route::any('/wechat/authorizer/{url}', [app\wechat\controller\IndexController::class, 'authorizer'])->name('wechat.authorizer');
 // 微信授权事件、消息与事件通知回调

@@ -7,16 +7,72 @@ import notification from 'ant-design-vue/es/notification'
 import {domTitle, setDocumentTitle} from '@/utils/domUtil'
 import {ACCESS_TOKEN} from '@/store/mutation-types'
 import {i18nRender} from '@/locales'
+import { checkInstall } from '@/api/install'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const allowList = ['login', 'register', 'registerResult', 'wx-authorizer', 'wx-callback'] // no redirect allowList
+const allowList = ['login', 'register', 'registerResult', 'wx-authorizer', 'wx-callback', 'install'] // no redirect allowList
 const loginRoutePath = '/user/login'
 const defaultRoutePath = '/dashboard/workplace'
+const installRoutePath = '/install'
+let installStatusChecked = false
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   NProgress.start() // start progress bar
   to.meta && typeof to.meta.title !== 'undefined' && setDocumentTitle(`${i18nRender(to.meta.title)} - ${domTitle}`)
+
+  // 只在首次访问时检查安装状态
+  if (!installStatusChecked) {
+    try {
+      const res = await checkInstall()
+      const installed = res.data.installed
+
+      // 缓存安装状态到 localStorage
+      localStorage.setItem('system_installed', installed)
+      installStatusChecked = true
+
+      if (!installed) {
+        // 未安装，跳转到安装向导
+        if (to.path !== installRoutePath) {
+          next({ path: installRoutePath })
+          NProgress.done()
+          return
+        }
+      } else {
+        // 已安装，不允许访问安装页面
+        if (to.path === installRoutePath) {
+          next({ path: loginRoutePath })
+          NProgress.done()
+          return
+        }
+      }
+    } catch (error) {
+      // 如果检查失败，使用本地缓存的状态
+      const cachedStatus = localStorage.getItem('system_installed')
+      if (cachedStatus === 'false' && to.path !== installRoutePath) {
+        next({ path: installRoutePath })
+        NProgress.done()
+        return
+      } else if (cachedStatus === 'true' && to.path === installRoutePath) {
+        next({ path: loginRoutePath })
+        NProgress.done()
+        return
+      }
+    }
+  } else {
+    // 使用缓存的安装状态
+    const cachedStatus = localStorage.getItem('system_installed')
+    if (cachedStatus === 'false' && to.path !== installRoutePath) {
+      next({ path: installRoutePath })
+      NProgress.done()
+      return
+    } else if (cachedStatus === 'true' && to.path === installRoutePath) {
+      next({ path: loginRoutePath })
+      NProgress.done()
+      return
+    }
+  }
+
   /* has token */
   const token = storage.get(ACCESS_TOKEN)
   if (token) {

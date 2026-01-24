@@ -11,6 +11,16 @@ use Tinywan\ExceptionHandler\Exception\BadRequestHttpException;
 
 class IndexController
 {
+    public $noNeedLogin = ['nginxTest'];
+
+    public function nginxTest(){
+        return success([
+            'module' => 'wechat',
+            'path' => '/wechat',
+            'message' => 'Nginx配置正确，/wechat路由可正常访问'
+        ]);
+    }
+
     /**
      * 处理微信平台消息入口
      * @throws BadRequestHttpException

@@ -7,6 +7,16 @@ use support\Request;
 
 class UserController extends BaseController
 {
+    public $noNeedLogin = ['nginxTest'];
+
+    public function nginxTest(){
+        return success([
+            'module' => 'admin',
+            'path' => '/admin',
+            'message' => 'Nginx配置正确，/admin路由可正常访问'
+        ]);
+    }
+
     public function info(){
         return success([
             'name' => 'admin',

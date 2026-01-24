@@ -13,6 +13,16 @@ use Tinywan\ExceptionHandler\Exception\BadRequestHttpException;
 
 class OpenApiController
 {
+    public $noNeedLogin = ['nginxTest'];
+
+    public function nginxTest(){
+        return success([
+            'module' => 'openapi',
+            'path' => '/openapi',
+            'message' => 'Nginx配置正确，/openapi路由可正常访问'
+        ]);
+    }
+
     /**
      * 获取token给第三方平台使用
      * @param Request $request

@@ -1,5 +1,10 @@
 <?php
 
+// 定义缺失的 CURL_SSLVERSION_TLSv1_2 常量（全局生效）
+if (!defined('CURL_SSLVERSION_TLSv1_2')) {
+    define('CURL_SSLVERSION_TLSv1_2', 6);
+}
+
 /**
  * @param string $key
  * @param $default
