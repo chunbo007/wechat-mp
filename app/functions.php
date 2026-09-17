@@ -3,64 +3,90 @@
  * Here is your custom functions.
  */
 
-function success($data = [], $code = 0, $msg = '操作成功', $is_array = false)
+use support\exception\BusinessException;
+use Webman\Push\Api;
+use plugin\saiadmin\app\logic\system\SystemConfigLogic;
+use plugin\saiadmin\utils\Arr;
+
+// 将url转换为本地路径
+function parseUrl($url): string
 {
-    if ($is_array) {
-        return ['code' => $code, 'data' => $data, 'msg' => $msg];
-    } else {
-        return json(['code' => $code, 'data' => $data, 'msg' => $msg]);
+    $parsed = parse_url($url);
+    if (empty($parsed['path'])) {
+        return '';
     }
+
+    $logic = new SystemConfigLogic();
+    $uploadConfig = $logic->getGroup('upload_config');
+    $local_root = Arr::getConfigValue($uploadConfig,'local_root');
+    $local_uri = Arr::getConfigValue($uploadConfig,'local_uri');
+
+    // 将路径中的\替换为/
+    $str = str_replace('\\', '/', $parsed['path']);
+    // 将路径中的访问路径换成储存路径
+    $str = str_replace($local_uri, $local_root, $str);
+    return realpath(path_combine(base_path(), $str));
 }
 
-function error($msg = "操作失败", $code = -1, $data = [], $is_array = false)
+// 判断channel是否在线
+function is_channel_online($channel): bool
 {
-    if ($is_array) {
-        return ['code' => $code, 'data' => $data, 'msg' => $msg];
-    } else {
-        return json(['code' => $code, 'data' => $data, 'msg' => $msg]);
+    $pusher = new Api(str_replace('0.0.0.0', '127.0.0.1', config('plugin.webman.push.app.api')), config('plugin.webman.push.app.app_key'), config('plugin.webman.push.app.app_secret'));
+    $channels = $pusher->getChannels();
+    return isset($channels['result']['channels'][$channel]);
+}
+
+/**
+ * 生成签名
+ * @param string $componentAppid
+ * @param string $componentSecret
+ * @param int $timestamp 时间戳
+ * @param array $body 请求参数
+ * @return string
+ */
+function gen_sign(string $componentAppid, string $componentSecret, int $timestamp, array $body): string
+{
+    $bodyMd5 = md5(gen_json_body($body));
+    return md5("$componentAppid,$bodyMd5,$timestamp,$componentSecret");
+}
+
+/**
+ * 生成Json格式的body
+ * @param array $body
+ * @return string
+ */
+function gen_json_body(array $body): string
+{
+    return (count($body) > 0) ? json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : '{}';
+}
+
+/**
+ * 检测是否是演示账号
+ */
+function filter_tester($userId = ''): void
+{
+    // 如果是队列调用，则暂时不检测
+    if(!request()) return;
+    
+    // 如果是API调用，则暂时不检测
+    if(request()->controller == 'plugin\wechat\app\controller\OpenApiController'){
+        return;
     }
-}
 
-// 加密函数
-function encrypt($data, $key)
-{
-    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-    $encrypted = openssl_encrypt($data, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
-    return base64_encode($encrypted . '::' . $iv);
-}
-
-// 解密函数
-function decrypt($data, $key)
-{
-    list($encrypted_data, $iv) = explode('::', base64_decode($data), 2);
-    return openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
-}
-
-// 生成签名
-function generateSign($params, $secretKey): string
-{
-    // 将参数按照键名进行字典排序
-    ksort($params);
-    // 拼接参数和对应的值
-    $signStr = '';
-    foreach ($params as $key => $value) {
-        $signStr .= $key . '=' . $value . '&';
+    // 如果是微信开放平台调用，则暂时不检测
+    if(request()->controller == 'plugin\wechat\app\controller\IndexController'){
+        return;
     }
-    // 拼接密钥
-    $signStr .= 'key=' . $secretKey;
-    // 使用哈希函数计算签名，这里使用 MD5 作为示例
-    return strtoupper(md5($signStr));
-}
 
-// 验证签名
-function verifySign($params, $secretKey, $sign): bool
-{
-    // 生成待验证的签名
-    $generatedSign = generateSign($params, $secretKey);
-    // 验证签名是否一致
-    if ($generatedSign === $sign) {
-        return true;
-    } else {
-        return false;
+    if (!$userId){
+        $result = getCurrentInfo();
+        if (!$result) {
+            throw new BusinessException('用户信息读取失败,请重新登录', 401);
+        }
+        $userId = $result['id'];
+    }
+    // 判断是否是演示账号
+    if ($userId == env('DEMO_ID')){
+        throw new BusinessException('当前为演示账号，不能执行操作命令',201);
     }
 }

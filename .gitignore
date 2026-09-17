@@ -1,3 +1,4 @@
+/runtime
 /.idea
 /.vscode
 /vendor
@@ -5,3 +6,9 @@
 .env
 /tests/tmp
 /tests/.phpunit.result.cache
+/build
+bat.bat
+files.txt
+/plugin/wechat
+/plugin/wechat_free
+.flyenv

@@ -10,7 +10,7 @@ return [
         'access_secret_key' => '2022d3d3LmJq',
 
         /** access令牌过期时间，单位：秒。默认 2 小时 */
-        'access_exp' => 3600 * 16,
+        'access_exp' => 7200 * 10,
 
         /** refresh令牌秘钥 */
         'refresh_secret_key' => '2022KTxigxc9o50c',
@@ -39,10 +39,18 @@ return [
         /** 缓存令牌前缀，默认 JWT:TOKEN: */
         'cache_token_pre' => 'JWT:TOKEN:',
 
+        /** 缓存刷新令牌前缀，默认 JWT:REFRESH_TOKEN: */
+        'cache_refresh_token_pre' => 'JWT:REFRESH_TOKEN:',
+
         /** 用户信息模型 */
         'user_model' => function ($uid) {
             return [];
         },
+
+        /** 是否支持 get 请求获取令牌 */
+        'is_support_get_token' => false,
+        /** GET 请求获取令牌请求key */
+        'is_support_get_token_key' => 'authorization',
 
         /** access令牌私钥 */
         'access_private_key' => <<<EOD

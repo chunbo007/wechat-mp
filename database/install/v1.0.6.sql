@@ -1,0 +1,1 @@
+UPDATE `eb_system_config` SET `value` = './public/storage/' WHERE `id` = 11 AND `key` = 'local_root';

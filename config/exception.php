@@ -13,5 +13,5 @@
  */
 
 return [
-    '' => \Tinywan\ExceptionHandler\Handler::class,
+    '' => support\exception\Handler::class,
 ];

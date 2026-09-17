@@ -1,146 +1,48 @@
-# 广告
-开发了一款SaaS化的中台，[云管家](https://www.isvapi.com)[https://www.isvapi.com](https://www.isvapi.com)，不想自己花时间搭建二开的朋友也可以直接去看看这个，当前这个开源项目仍然可以正常使用，功能不受影响
-
-# 在线交流
-| 个人微信 | 微信群 |
-| :---: | :---: |
-| <img src="http://img.isvapi.com/www/images/wechat/wechat-qrcode.jpg" alt="个人微信" width=260>| <img src="https://img.isvapi.com/www/images/wechat/wechat-group.jpg" alt="微信群" width=260> |
-
 # wechat-mp 项目简介
-微信开放平台管理工具
-微信开放平台服务商一般有多套小程序需要管理，帮人代开发时需要客户不停扫码授权，体验极其不好。对于SAAS小程序服务商也可以在运维平台中尝试二开对接开放平台的api，但是项目多了以后每个运营平台都需要重复造轮子，而且维护成本也高，所以萌生了写一个通用管理微信开放平台的工具。
+云管家官网 [https://isvapi.com](https://isvapi.com)
 
-微信官方其实有提供“第三方平台云服务”，但需要付费使用或者下载他们的源码本地部署，可惜官方只提供了GO语言的版本，所以只能自己写一个了。
+微信小程序服务商通常需要同时管理多个小程序。帮客户代开发时，经常要让客户反复扫码授权，整个流程比较繁琐，体验也不太好。
 
-目前打算先实现以下功能
+如果是 SaaS 小程序项目，也可以直接在自己的运营或运维后台对接微信开放平台 API，把授权、版本管理、发布等功能集成进去。但项目一多，每套系统都要重复开发一遍类似功能，不仅浪费时间，后续维护起来也很麻烦。
 
-1. 做为中台，为其他项目提供 authorizer_access_token
-2. 配置服务器域名
-3. 配置业务域名
-4. 上传小程序
-5. 生成体验版
-6. 发布小程序
-7. ...
+所以我就有了做一个通用管理工具的想法，把微信开放平台常用能力统一整合起来，让不同项目都可以直接使用，减少重复开发，也方便集中管理多个小程序。
+
+
+微信官方其实有提供“第三方平台云服务”，但是功能模块脱离群众、不够实用，且官方只提供了GO语言的版本，所以只能自己写一个了。
+
+目前以实现以下功能
+1. 添加多个开放平台，对开放平台模板进行管理
+2. 配置服务器域名、配置业务域名、隐私保护、类目管理、
+3. 批量上传小程序、生成体验版、发布小程序、版本回退、自动发布
+4. 交易保障(处理小程序交易投诉)、体验者管理、微信认证、ICP备案
+5. 开放api(便捷的对接自己的系统)、调试工具、消息日志
 
 # 开源支持
 1. 后端 [webman](https://www.workerman.net/doc/webman)
-2. 前端 [ant-design-vue-pro](https://pro.antdv.com/docs/getting-started)
-3. SDK [EasyWechat](https://easywechat.com)
+2. 前端 Vue3
+3. 微信php SDK [EasyWechat](https://easywechat.com)
 
-# 本地搭建视频教程
-[wechat-mp 微信开放平台小程序管理工具本地部署教程](https://www.bilibili.com/video/BV1M7421f7Ff)
+# 环境要求
 
-# 界面演示
-![授权管理](https://github.com/chunbo007/wechat-mp/assets/16535982/14700ac3-fea0-475e-a1e6-f3a6ebbec556)
-![版本管理](https://github.com/chunbo007/wechat-mp/assets/16535982/2dbe277d-77ab-4295-9755-9b39dcf3a9ca)
-![版本管理2](https://github.com/chunbo007/wechat-mp/assets/16535982/92cb9fc4-ace3-4fb8-93e3-f9a039b04e9e)
-![管理管理3](https://github.com/chunbo007/wechat-mp/assets/16535982/37abf340-e1c7-4538-895a-fe9ac767a14e)
-![体验者](https://github.com/user-attachments/assets/746c115b-f839-4a9e-bbcc-55fef7481690)
-![隐私协议](https://github.com/user-attachments/assets/6d381d8f-2ec6-4953-9cd1-2d9de7fc59b3)
-![开放平台](https://github.com/chunbo007/wechat-mp/assets/16535982/5a3ef41d-5257-4051-a450-2f67907d1fe5)
-![开放平台2](https://github.com/chunbo007/wechat-mp/assets/16535982/9d195873-62a2-4483-ae27-9fdb9b2166e0)
-![消息日志](https://github.com/chunbo007/wechat-mp/assets/16535982/7fa50073-c979-43c5-aaeb-30386f1ab1b6)
-![转发日志](https://github.com/chunbo007/wechat-mp/assets/16535982/9614e728-5a9e-4438-83d8-f736c2fbd17c)
+| 项目 | 要求 |
+| --- | --- |
+| PHP | 8.2.x |
+| PHP 扩展 | pdo_mysql、redis、curl、fileinfo、mbstring、openssl、json、xml |
+| 数据库 | MySQL 5.7 / 8.0 |
+| Redis | 5.0 以上（队列、token 缓存依赖） |
+| 目录权限 | `runtime`、`public/storage` 可写；`.env` 可写（安装向导需要写入） |
 
-# 不想二开，直接使用
-当前页面右方有个发行版，点击最新版，里面有具体的使用步骤，下载zip跟着操作即可
+安装向导还会检测 `stream_socket_server`、`proc_open`、`shell_exec` 等函数是否被 `disable_functions` 禁用，Linux 下还需要 pcntl、posix 扩展。
 
-# 本地二开步骤
+# 安装
+0. 参考 [https://www.isvapi.com/install/baota.html](https://www.isvapi.com/install/baota.html)
+1. 上传代码到服务器，站点根目录指向 `public`
+2. nginx 把请求反代到 webman 进程（默认监听 `0.0.0.0:8989`），参考下方「打包上线」里的配置
+3. 启动 webman：Linux 下 `php start.php start -d`，Windows 下 `php windows.php`
+4. 浏览器访问站点，未安装时会自动进入安装向导，按提示填写数据库、Redis、站点地址和管理员账号
+5. **安装完成后重启一次 webman**
 
-1. 下载代码
-
-    ```
-    // github
-    git clone https://github.com/chunbo007/wechat-mp.git
-    
-    // gitee
-    git clone https://gitee.com/chunboli/wechat-mp.git
-    ```
-2. 安装相关依赖
-    ```
-    // 安装php相关依赖
-    cd wechat-mp
-    composer install
-    // 安装前端依赖
-    cd front
-    yarn install --production(推荐) 或 npm install --production
-    ```
-3. 配置文件
-   + 手动执行根目录下的 install.sql 导入数据库
-   + 复制根目录下的 .env.example 文件为 .env 文件，并修改相关配置
-4. 本地运行
-   + windows下运行 php windwos.php start
-   + linux下运行 php start.php start (用于开发调试)
-   + linux下后台运行 php start.php start -d (用于正式环境)
-
-   以上根据自己实际情况选择，然后运行前端项目
-   + 在 front 目录下执行 yarn serve
-
-   之后打开浏览器访问 http://localhost:8001 就可以了，默认用户名/密码都是 admin
-
-5. 打包上线
-   1. 进行front下运行 yarn build 进行打包
-   2. 将打包后的dist文件夹上传到服务器
-   3. 修改nginx配置文件，在其中添加
-   ```
-    location /admin {
-      proxy_pass http://127.0.0.1:8789/admin;
-      proxy_set_header   X-Forwarded-Proto $scheme;
-      proxy_set_header   X-Real-IP         $remote_addr;
-    }
-    
-    location /wechat {
-      proxy_pass http://127.0.0.1:8789/wechat;
-      proxy_set_header   X-Forwarded-Proto $scheme;
-      proxy_set_header   X-Real-IP         $remote_addr;
-    }
-
-    location /openapi {
-      proxy_pass http://127.0.0.1:8789/openapi;
-      proxy_set_header   X-Forwarded-Proto $scheme;
-      proxy_set_header   X-Real-IP         $remote_addr;
-    }
-    
-    location / {
-      try_files $uri $uri/ /index.html;
-    }
-   ```
-
-# 外部调用
-
-如果你需要的不只是小程序版本管理相关的功能，需要自己实现其他功能，可能需要用到
-component_access_token、component_appid、authorizer_appid、authorizer_access_token
-等参数，由于你在自己的项目中刷新token，可能会让wechat-mp的token失效，或者wechat-mp会让你项目的token失效
-所以留了一个开放接口，供其他项目获取相关token，具体调用方式如下
-
-```
-// 生成签名
-function generateSign($params, $secretKey): string
-{
-    // 将参数按照键名进行字典排序
-    ksort($params);
-    // 拼接参数和对应的值
-    $signStr = '';
-    foreach ($params as $key => $value) {
-        $signStr .= $key . '=' . $value . '&';
-    }
-    // 拼接密钥
-    $signStr .= 'key=' . $secretKey;
-    // 使用哈希函数计算签名，这里使用 MD5 作为示例
-    return strtoupper(md5($signStr));
-}
-
-$params = [
-    'platform_appid' => '', // 开放平台的appid
-    'appid' => '', // 小程序的appid
-    'time' => time(),
-];
-$secretKey = '';
-$params['sign'] = generateSign($params,$secretKey);
-$url = 'https://xxxxxx.com/openapi/getToken?' . http_build_query($params);
-$res = file_get_contents($url);
-//var_dump(json_decode($res,true));
-```
+<img src="https://img.isvapi.com/www/images/install/step-6.png" alt="安装向导">
 
 # 疑难解答
 ## curl: (60) SSL certificate problem: unable to get local issuer certificate
@@ -156,10 +58,11 @@ $res = file_get_contents($url);
 
 ini
 curl.cainfo = /path/to/downloaded/cacert.pem
-注意证书文件路径为绝对路径！以自己实际情况为准。
 
-其它修改 HTTP 类源文件的方式是不允许的。
+注意证书文件路径为绝对路径！以自己实际情况为准。
 
 如有不明白的可以留言，欢迎各位提pr
 
 如果对你的项目有帮助，欢迎star，谢谢
+
+<img src="https://img.isvapi.com/www/images/wechat/wechat-qrcode.jpg" alt="个人微信" width=260>

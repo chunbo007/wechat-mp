@@ -21,4 +21,30 @@ namespace support;
 class Request extends \Webman\Http\Request
 {
 
+    /**
+     * 获取参数增强方法
+     * @param array $params
+     * @return array
+     */
+    public function more(array $params): array
+    {
+        $p = [];
+        foreach ($params as $param) {
+            if (!is_array($param)) {
+                $p[$param] = $this->input($param);
+            } else {
+                if (!isset($param[1])) $param[1] = '';
+                if (is_array($param[0])) {
+                    $name = $param[0][0] . '/' . $param[0][1];
+                    $keyName = $param[0][0];
+                } else {
+                    $name =  $param[0];
+                    $keyName = $param[0];
+                }
+                $p[$keyName] = $this->input($name, $param[1]);
+            }
+        }
+        return $p;
+    }
+
 }

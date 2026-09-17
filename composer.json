@@ -24,17 +24,27 @@
     "source": "https://github.com/walkor/webman"
   },
   "require": {
-    "php": ">=8.1.0",
-    "workerman/webman-framework": "^1.5.0",
+    "php": "^8.2.0",
+    "workerman/webman-framework": "^2.1",
     "monolog/monolog": "^2.0",
-    "w7corp/easywechat": "^6.0",
-    "vlucas/phpdotenv": "^5.6",
+    "saithink/saiadmin": "3.2.5",
     "ext-simplexml": "*",
-    "webman/think-orm": "^1.1",
-    "tinywan/jwt": "^1.8",
-    "tinywan/exception-handler": "^1.2",
-    "ext-json": "*",
-    "ext-curl": "*"
+    "ext-curl": "*",
+    "webman/redis-queue": "~2.1",
+    "webman/console": "^2.1",
+    "workerman/crontab": "^1.0",
+    "w7corp/easywechat": "6.16.0",
+    "vlucas/phpdotenv": "^5.6",
+    "qiniu/php-sdk": "^7.14",
+    "ymlluo/group-robot": "^1.1",
+    "yansongda/pay": "~3.7.0",
+    "hyperf/pimple": "~2.2.0",
+    "webman/think-orm": "~2.1",
+    "phpmailer/phpmailer": "^6.9",
+    "webman/log": "~2.1",
+    "symfony/var-dumper": "^6.4",
+    "webman/redis": "^2.1",
+    "illuminate/events": "^12.49"
   },
   "suggest": {
     "ext-event": "For better performance. "
@@ -45,11 +55,7 @@
       "app\\": "./app",
       "App\\": "./app",
       "app\\View\\Components\\": "./app/view/components"
-    },
-    "files": [
-      "./support/helpers.php",
-      "./support/initialization.php"
-    ]
+    }
   },
   "scripts": {
     "post-package-install": [
@@ -62,6 +68,8 @@
       "support\\Plugin::uninstall"
     ]
   },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "config": {
     "allow-plugins": {
       "easywechat-composer/easywechat-composer": true

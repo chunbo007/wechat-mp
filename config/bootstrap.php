@@ -12,9 +12,12 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
+if (!defined('CURL_SSLVERSION_TLSv1_2')) {
+    define('CURL_SSLVERSION_TLSv1_2', 6);
+}
+
 return [
     support\bootstrap\Session::class,
-    support\bootstrap\LaravelDb::class,
     Webman\ThinkOrm\ThinkOrm::class,
-    support\CurlConfig::class,
+    app\bootstrap\InitSystem::class,
 ];
